@@ -1,9 +1,14 @@
 <script setup lang="ts">
-import TheWelcome from '../components/TheWelcome.vue'
+import Header from '../components/Header.vue'
+import List from '../components/ProductList.vue'
 </script>
 
 <template>
+  <Header />
   <main>
-    <TheWelcome />
+    <List />
   </main>
 </template>
+
+<style scoped>
+</style>
