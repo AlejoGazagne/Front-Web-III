@@ -3,7 +3,7 @@
     <header>
         <RouterLink to="/" id="title">Productos</RouterLink>
         <nav>
-            <RouterLink to="/">Agregar Producto</RouterLink>
+            <RouterLink to="/addProduct">Agregar Producto</RouterLink>
         </nav>
     </header>
 </template>

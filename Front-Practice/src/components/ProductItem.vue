@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import router from '@/router';
 import { defineProps } from 'vue';
 
 const props = defineProps({
@@ -7,17 +8,23 @@ const props = defineProps({
         required: true
     }
 })
+
 const emit = defineEmits<{
     (event: 'delete', id: number): void;
 }>();
 
-function deleteProduct() {
+function deleteProduct(event) {
+    event.stopPropagation();
     emit('delete', props.product.id);
 }
+
+const goToDetail = (id: number) => {
+    router.push({ name: 'ProductDetail', params: { id } });
+};
 </script>
 
 <template>
-    <div class="product-card" v-if="product.rating.rate > 4">
+    <div class="product-card" v-if="product.rating.rate > 4" @click="goToDetail">
         <img :src="product.image" :alt="product.title">
         <div class="product-info">
             <h2>{{ product.title }}</h2>

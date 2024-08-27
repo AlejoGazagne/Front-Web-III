@@ -1,29 +1,14 @@
 <script setup lang="ts">
 import ProductItem from './ProductItem.vue'
-import { onMounted, ref } from 'vue';
+import { onMounted, ref, toRefs } from 'vue';
+import { useProductStore } from '@/stores/useProductStore'
 
-const products = ref([])
-const isFinished = ref(false)
-
-const fetchProducts = async () => {
-    try {
-        const response = await fetch('https://fakestoreapi.com/products')
-        const data = await response.json()
-        products.value = data
-    } catch (error) {
-        console.error('Error al obtener productos:', error)
-    } finally {
-        isFinished.value = true
-    }
-}
+const productStore = useProductStore()
+const { products, isFinished } = toRefs(productStore);
 
 onMounted(() => {
-    fetchProducts()
+    productStore.fetchProducts()
 })
-
-function deleteProduct(id: number) {
-    products.value = products.value.filter(product => product.id !== id)
-}
 
 </script>
 
@@ -32,7 +17,7 @@ function deleteProduct(id: number) {
         <p>Lista de productos</p>
         <h3 v-if="!isFinished">Cargando caralogo... </h3>
         <section v-else class="catalogo">
-            <ProductItem v-for="product in products" :key="product.id" :product="product" @delete="deleteProduct" />
+            <ProductItem v-for="product in products" :key="product.id" :product="product" @delete="productStore.deleteProduct" @detail=""/>
         </section>
     </main>
 </template>
