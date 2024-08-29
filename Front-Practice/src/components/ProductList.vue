@@ -17,7 +17,7 @@ onMounted(() => {
         <p>Lista de productos</p>
         <h3 v-if="!isFinished">Cargando caralogo... </h3>
         <section v-else class="catalogo">
-            <ProductItem v-for="product in products" :key="product.id" :product="product" @delete="productStore.deleteProduct" @detail=""/>
+            <ProductItem v-for="product in products" :key="product.id" :product="product" @delete="productStore.deleteProduct" />
         </section>
     </main>
 </template>

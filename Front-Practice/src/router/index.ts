@@ -9,15 +9,15 @@ const router = createRouter({
       component: () => import('../views/HomeView.vue')
     },
     {
-      path: '/ProductDetail/:id',
+      path: '/product-detail/:id',
       name: 'ProductDetail',
       component: () => import('../views/ProductDetailView.vue')
     },
-    {
-      path: '/addProduct',
-      name: 'AddProduct',
-      component: () => import('../views/AddProductView.vue')
-    }
+    // {
+    //   path: '/add-product',
+    //   name: 'AddProduct',
+    //   component: () => import('../views/AddProductView.vue')
+    // }
   ]
 })
 

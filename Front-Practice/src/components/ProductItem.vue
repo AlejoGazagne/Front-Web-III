@@ -13,7 +13,7 @@ const emit = defineEmits<{
     (event: 'delete', id: number): void;
 }>();
 
-function deleteProduct(event) {
+function deleteProduct(event: { stopPropagation: () => void; }) {
     event.stopPropagation();
     emit('delete', props.product.id);
 }
@@ -24,7 +24,7 @@ const goToDetail = (id: number) => {
 </script>
 
 <template>
-    <div class="product-card" v-if="product.rating.rate > 4" @click="goToDetail">
+    <div class="product-card" v-if="product.rating.rate > 4" @click="goToDetail(product.id)">
         <img :src="product.image" :alt="product.title">
         <div class="product-info">
             <h2>{{ product.title }}</h2>
