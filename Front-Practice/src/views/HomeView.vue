@@ -1,14 +1,18 @@
-<script setup lang="ts">
-import Header from '../components/Header.vue'
-import List from '../components/ProductList.vue'
-</script>
-
 <template>
-  <Header />
-  <main>
-    <List />
-  </main>
+  <hello-world />
 </template>
 
-<style scoped>
-</style>
+<script lang="ts">
+import { defineComponent } from 'vue';
+
+// Components
+import HelloWorld from '../components/HelloWorld.vue';
+
+export default defineComponent({
+  name: 'HomeView',
+
+  components: {
+    HelloWorld,
+  },
+});
+</script>
