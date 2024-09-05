@@ -6,11 +6,10 @@ import ProductItem from '@/components/ProductItem.vue';
 const productStore = useProductStore();
 const { products, isLoading } = toRefs(productStore);
 
-console.log(products.value);
-
 onMounted(() => {
     productStore.fetchProducts();
 });
+
 const topProducts = computed(() => {
     return products.value.slice().sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 3);
 });
@@ -25,7 +24,15 @@ const topProducts = computed(() => {
                 <v-btn class="see-more">See more <v-icon icon="mdi-arrow-right" class="pl-3" start></v-icon></v-btn>
             </v-col>
             <v-col>
-                <h3 v-if="isLoading" class="mt-2">Loading... </h3>
+                <!-- <h3 v-if="isLoading" class="mt-2">Loading... </h3> -->
+                 <div v-if="isLoading">
+                    <v-row>
+                        <v-col v-for="i in 3" :key="i" cols="12" sm="4">
+                            <v-skeleton-loader :elevation="2" type="card" width="300px" class="mt-3"></v-skeleton-loader>
+                        </v-col>
+                    </v-row>
+                
+                 </div>
                 <section v-else class="catalog">
                     <ProductItem v-for="product in topProducts" :key="product.id" :product="product"
                         @delete="productStore.deleteProduct" />

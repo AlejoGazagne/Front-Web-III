@@ -11,6 +11,9 @@ export const useProductStore = defineStore('productStore', {
             try {
                 const response = await fetch('https://fakestoreapi.com/products');
                 const data = await response.json();
+                // const response = await fetch('https://dummyjson.com/products');
+                // const data = await response.json();
+                // console.log(data)
                 this.products = data;
             } catch (error) {
                 console.error('Error al obtener productos:', error);
