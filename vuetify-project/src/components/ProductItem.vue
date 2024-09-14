@@ -20,7 +20,7 @@ const props = defineProps({
 </script>
 
 <template>
-    <v-card :disabled="load" :isLoading="load" class="mx-auto my-12 product-card" max-width="374">
+    <v-card :disabled="load" :isLoading="load" class="mx-auto my-12 product-card" max-width="280">
         <template v-slot:loader="{ isActive }">
             <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
         </template>
@@ -33,8 +33,8 @@ const props = defineProps({
 
         <v-card-text class="flex-grow-1">
             <v-row align="center" class="mx-0">
-                <v-rating :model-value="product.rating.rate" color="amber" density="compact" size="small" half-increments
-                    readonly></v-rating>
+                <v-rating :model-value="product.rating.rate" color="amber" density="compact" size="small"
+                    half-increments readonly></v-rating>
 
                 <div class="text-grey ms-4">
                     {{ product.rating.rate }} ({{ product.rating.count }})
@@ -45,11 +45,14 @@ const props = defineProps({
                 Price: $ {{ product.price }}
             </div>
 
-            <div>{{ product.description.length > 100 ? product.description.substring(0, 100) + '...' : product.description }} </div>
+            <div>{{ product.description.length > 100 ? product.description.substring(0, 100) + '...' :
+                product.description }}
+            </div>
         </v-card-text>
 
         <v-card-actions class="justify-end">
             <v-btn color="deep-black-lighten-2" text="View more" block border @click="viewMore(product.id)"></v-btn>
+            <!-- TODO pasar parametros por state. -->
         </v-card-actions>
     </v-card>
 </template>

@@ -24,8 +24,9 @@ const productButtonClass = computed(() => {
       </v-col>
       <v-col cols="6">
         <v-toolbar-items>
-          <v-btn text :class="[homeButtonClass, 'custom-btn']">Home</v-btn>
-          <v-btn text :class="[productButtonClass, 'custom-btn']">Products</v-btn>
+
+          <v-btn text :class="[homeButtonClass, 'custom-btn']" to="/">Home</v-btn>
+          <v-btn text :class="[productButtonClass, 'custom-btn']" to="/products">Products</v-btn>
         </v-toolbar-items>
       </v-col>
       <v-col cols="2" offset="1">

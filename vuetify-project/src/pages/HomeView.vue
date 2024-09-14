@@ -1,9 +1,20 @@
 <script lang="ts" setup>
+import { computed, onMounted, toRefs } from 'vue';
 import NavBar from '@/components/NavBar.vue'
 import ItemsList from '@/components/ProductList.vue'
 import Footer from '@/components/Footer.vue'
-// import Item from '@/components/ProductItem.vue'
+import { useProductStore } from '@/stores/useProductStore';
 
+const productStore = useProductStore();
+const { products, isLoading } = toRefs(productStore);
+
+onMounted(() => {
+  productStore.fetchProducts();
+});
+
+const topProducts = computed(() => {
+  return products.value.slice().sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 3);
+});
 
 </script>
 
@@ -18,11 +29,21 @@ import Footer from '@/components/Footer.vue'
         <p>Lorem ipsum dolor sit amet...</p>
       </div>
     </div>
-    <ItemsList />
+    <v-row>
+      <v-col cols="2" offset="">
+        <h3 class="mb-6 mt-15">Best Selling</h3>
+        <v-btn class="see-more">See more <v-icon icon="mdi-arrow-right" class="pl-3" start></v-icon></v-btn>
+      </v-col>
+      <v-col class="d-flex flex-wrap justify-lg-space-around">
+        <ProductItem v-for="product in topProducts" :key="product.id" :product="product"
+          @delete="productStore.deleteProduct" />
+      </v-col>
+    </v-row>
+
   </v-container>
 
   <footer>
-    <Footer/>
+    <Footer />
   </footer>
 
 </template>
