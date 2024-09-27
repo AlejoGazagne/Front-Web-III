@@ -7,7 +7,7 @@ const load = ref(false)
 const viewMore = () => {
     load.value = true
     setTimeout(() => (load.value = false), 2000)
-    router.push({ name: 'ProductDetail', params: { id: props.product.id }, state: props.product });
+    router.push({ name: 'ProductDetail', params: { id: props.product.id } });
 }
 
 const props = defineProps({

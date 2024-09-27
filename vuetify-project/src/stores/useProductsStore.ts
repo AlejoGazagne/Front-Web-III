@@ -10,18 +10,29 @@ export const useProductStore = defineStore('productStore', {
         async fetchProducts() {
             this.isLoading = true;
             try {
-                const response = await fetch('https://fakestoreapi.com/products');
+                // const response = await fetch('https://fakestoreapi.com/products');
+                // const data = await response.json();
+                // this.products = data;
+                //http://localhost:5000/products
+                const response = await fetch('http://localhost:5000/products');
                 const data = await response.json();
                 this.products = data;
 
-                //http://localhost:5000/products
-
-                // const response = await fetch('http://localhost:5000/products');
-                // const data = await response.json();
-                // this.products = data;
-
             } catch (error) {
                 console.error('Error al obtener productos:', error);
+            } finally {
+                this.isLoading = false;
+            }
+        },
+        async fetchProductById(id: Number) {
+            this.isLoading = true;
+            try {
+                // const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+                const response = await fetch(`http://localhost:5000/products/${id}`);
+                const data = await response.json();
+                return data;
+            } catch (error) {
+                console.error('Error al obtener producto:', error);
             } finally {
                 this.isLoading = false;
             }

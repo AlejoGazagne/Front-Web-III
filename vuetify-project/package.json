@@ -10,6 +10,7 @@
   "dependencies": {
     "@mdi/font": "7.4.47",
     "core-js": "^3.37.1",
+    "json-server": "^1.0.0-beta.3",
     "pinia": "^2.2.2",
     "roboto-fontface": "*",
     "vue": "^3.4.31",

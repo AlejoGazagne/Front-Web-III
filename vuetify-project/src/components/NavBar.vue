@@ -4,7 +4,6 @@ import { useRoute, RouterLink } from 'vue-router'
 const route = useRoute()
 
 const currentUrl = route.name
-console.log(currentUrl)
 
 const homeButtonClass = computed(() => {
   return currentUrl === 'Home' ? 'active-button' : 'inactive-button'
@@ -16,7 +15,7 @@ const productButtonClass = computed(() => {
 </script>
 
 <template>
-  <v-app-bar elevation="0">
+  <v-app-bar elevation="1">
     <v-row align="center">
       <v-col cols="2" offset="1">
         <router-link to="/" class="custom-link"><v-toolbar-title
@@ -25,13 +24,13 @@ const productButtonClass = computed(() => {
       <v-col cols="6">
         <v-toolbar-items>
           <router-link to="/" class="custom-link"><v-btn :class="[homeButtonClass, 'custom-btn']">Home</v-btn></router-link>
-          <router-link to="/" class="custom-link"><v-btn :class="[productButtonClass, 'custom-btn']">Products</v-btn></router-link>
+          <router-link to="/products" class="custom-link"><v-btn :class="[productButtonClass, 'custom-btn']">Products</v-btn></router-link>
         </v-toolbar-items>
       </v-col>
       <v-col cols="2" offset="1">
         <v-toolbar-items>
           <v-btn class="custom-btn"><v-icon>mdi-cart</v-icon></v-btn>
-          <v-btn><v-icon>mdi-account</v-icon></v-btn>
+          <router-link to="/login" class="custom-link"><v-btn class="custom-btn"><v-icon>mdi-account</v-icon></v-btn></router-link>
         </v-toolbar-items>
       </v-col>
     </v-row>

@@ -11,8 +11,6 @@ onMounted(() => {
   productStore.fetchProducts();
 });
 
-console.log("probando ")
-
 const topProducts = computed(() => {
   return products.value.slice().sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 3);
 });
@@ -33,7 +31,9 @@ const topProducts = computed(() => {
     <v-row>
       <v-col cols="2" offset="1">
         <h3 class="mb-6 mt-15">Best Selling</h3>
-        <v-btn class="see-more">See more <v-icon icon="mdi-arrow-right" class="pl-3" start></v-icon></v-btn>
+        <router-link to="/products" class="see-more">
+            See more <v-icon icon="mdi-arrow-right" class="pl-3" start></v-icon>
+          </router-link>
       </v-col>
       <v-col class="d-flex flex-wrap justify-lg-space-around" cols="9">
         <ProductItem v-for="product in topProducts" :key="product.id" :product="product"
@@ -60,5 +60,15 @@ const topProducts = computed(() => {
 .banner-bar {
   background-color: #7b9c9c;
   border-radius: .5rem;
+}
+
+.see-more {
+  text-decoration: none;
+  color: inherit;
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #7c9d9c;
+  padding: .5rem 1rem;
+  border-radius: 5px;
 }
 </style>
