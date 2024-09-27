@@ -1,9 +1,8 @@
 <script lang="ts" setup>
 import { computed, onMounted, toRefs } from 'vue';
 import NavBar from '@/components/NavBar.vue'
-import ItemsList from '@/components/ProductList.vue'
 import Footer from '@/components/Footer.vue'
-import { useProductStore } from '@/stores/useProductStore';
+import { useProductStore } from '@/stores/useProductsStore';
 
 const productStore = useProductStore();
 const { products, isLoading } = toRefs(productStore);
@@ -11,6 +10,8 @@ const { products, isLoading } = toRefs(productStore);
 onMounted(() => {
   productStore.fetchProducts();
 });
+
+console.log("probando ")
 
 const topProducts = computed(() => {
   return products.value.slice().sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 3);
@@ -30,11 +31,11 @@ const topProducts = computed(() => {
       </div>
     </div>
     <v-row>
-      <v-col cols="2" offset="">
+      <v-col cols="2" offset="1">
         <h3 class="mb-6 mt-15">Best Selling</h3>
         <v-btn class="see-more">See more <v-icon icon="mdi-arrow-right" class="pl-3" start></v-icon></v-btn>
       </v-col>
-      <v-col class="d-flex flex-wrap justify-lg-space-around">
+      <v-col class="d-flex flex-wrap justify-lg-space-around" cols="9">
         <ProductItem v-for="product in topProducts" :key="product.id" :product="product"
           @delete="productStore.deleteProduct" />
       </v-col>
