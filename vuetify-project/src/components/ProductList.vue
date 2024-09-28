@@ -18,8 +18,8 @@ onMounted(() => {
             <v-col>
                 <div v-if="isLoading">
                     <v-row>
-                        <v-col v-for="i in 4" :key="i" cols="12" sm="3">
-                            <v-skeleton-loader :elevation="2" type="card" width="300px"
+                        <v-col v-for="i in 4" :key="i" cols="12" sm="3" >
+                            <v-skeleton-loader :elevation="2" type="card" width="300" height="300"
                                 class="mt-3"></v-skeleton-loader>
                         </v-col>
                     </v-row>

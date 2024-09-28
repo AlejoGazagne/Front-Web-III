@@ -6,8 +6,10 @@ const load = ref(false)
 
 const viewMore = () => {
     load.value = true
-    setTimeout(() => (load.value = false), 2000)
-    router.push({ name: 'ProductDetail', params: { id: props.product.id } });
+    setTimeout(() => {
+        load.value = false
+        router.push({ name: 'ProductDetail', params: { id: props.product.id } });
+    }, 1000)
 }
 
 const props = defineProps({
@@ -22,7 +24,7 @@ const props = defineProps({
 <template>
     <v-card :disabled="load" :isLoading="load" class="mx-auto my-12 product-card" max-width="280">
         <template v-slot:loader="{ isActive }">
-            <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
+            <v-progress-linear :active="isActive" color="deep-purple" height="7" indeterminate></v-progress-linear>
         </template>
 
         <v-img height="250" :src=props.product.image alt="Imagen producto" cover></v-img>

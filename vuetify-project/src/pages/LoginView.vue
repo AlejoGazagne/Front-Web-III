@@ -7,7 +7,8 @@ const password = ref('');
 const valid = ref(false);
 const router = useRouter();
 
-// Definimos las reglas de validación
+const load = ref(false)
+
 const emailRules = [
   (v: string) => !!v || 'Email es requerido',
   (v: string) => /.+@.+\..+/.test(v) || 'Email debe ser válido'
@@ -18,10 +19,31 @@ const passwordRules = [
   (v: string) => v.length >= 6 || 'Contraseña debe tener al menos 6 caracteres'
 ];
 
-const submit = () => {
+const submit = async () => {
+  load.value = true
   if (valid.value) {
-    console.log('Email:', email.value, 'Password:', password.value);
-    router.push('/');
+    try {
+      const response = await fetch(`http://localhost:5000/users?email=${email.value}&password=${password.value}&_limit=1`);
+      if (!response.ok) {
+        throw new Error('Error en la petición');
+      }
+      const user = await response.json();
+      console.log(user);
+      setTimeout(() => {
+        load.value = false;
+        if (user.length > 0) {
+          if (user[0].role === 'admin'){
+            localStorage.setItem('token', `admin,${user[0].id}`);
+          } else {
+            localStorage.setItem('token', `user,${user[0].id}`);
+          }
+          router.push({ name: 'Home' });
+        }
+      }, 1000)
+    } catch (error) {
+      console.error(error);
+      load.value = false;
+    }
   }
 };
 
@@ -32,7 +54,10 @@ const goToRegister = () => {
 
 <template>
 <v-container class="d-flex flex-column justify-center align-center" style="height: 100vh;">
-    <v-card class="pa-6" width="500" elevation="4">
+    <v-card :disabled="load" :isLoading="load" class="pa-6" width="500" elevation="4">
+      <template v-slot:loader="{ isActive }">
+            <v-progress-linear :active="isActive" color="deep-purple" height="7" indeterminate></v-progress-linear>
+        </template>
       <v-card-title>Login</v-card-title>
       
       <v-card-text>

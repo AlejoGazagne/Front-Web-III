@@ -4,25 +4,36 @@
             "id": "1",
             "username": "matias",
             "email": "matias@mail.com",
-            "password": "123"
+            "password": "123",
+            "role": "user"
         },
         {
             "id": "1725162074586",
             "email": "matias2@mail.com",
             "username": "hola",
-            "password": "124134"
+            "password": "124134",
+            "role": "user"
         },
         {
             "id": "1725162730432",
             "email": "carlos@mail.com",
             "username": "carlos",
-            "password": "sains123"
+            "password": "sains123",
+            "role": "user"
         },
         {
             "id": "1725163226103",
             "email": "prueba@mail.com",
             "username": "pruebaprueba",
-            "password": "prueba123"
+            "password": "prueba123",
+            "role": "user"
+        },
+        {
+            "id": "2",
+            "email": "alejo@gmail.com",
+            "username": "alejo",
+            "password": "alejo123",
+            "role": "admin"
         }
     ],
     "products": [

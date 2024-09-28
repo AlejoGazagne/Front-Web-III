@@ -34,7 +34,29 @@ const router = createRouter({
       path: "/register",
       name: "Register",
       component: () => import('../pages/RegisterView.vue')
-    }
+    },
+    {
+      path: "/admin",
+      children: [
+        {
+          path: "",
+          name: "AdminProfile",
+          component: () => import('../pages/AdminProfileView.vue')
+        },
+      ],
+      meta: { requiresAuth: true, isAdmin: true }
+    },
+    {
+      path: "/user",
+      children: [
+        {
+          path: "",
+          name: "UserProfile",
+          component: () => import('../pages/UserProfileView.vue')
+        }
+      ],
+      meta: { requiresAuth: true }
+    },
   ]
 })
 
@@ -55,6 +77,10 @@ router.onError((err, to) => {
 
 router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
+})
+
+router.beforeEach((to, from, next) => {
+  
 })
 
 export default router

@@ -1,4 +1,5 @@
 <script lang="ts" setup>
+import router from '@/router';
 import { computed } from 'vue'
 import { useRoute, RouterLink } from 'vue-router'
 const route = useRoute()
@@ -11,6 +12,21 @@ const homeButtonClass = computed(() => {
 const productButtonClass = computed(() => {
   return currentUrl === 'Products' ? 'active-button' : 'inactive-button'
 });
+
+const isAdmin = computed(() => {
+  return localStorage.getItem('token')?.split(',')[0] === 'admin'
+})
+
+const handleAccountClick = () => {
+  const role = localStorage.getItem('token')?.split(',')[0]
+  if (role === 'admin') {
+    router.push({ name: 'AdminProfile' })
+  } else if (role === 'user') {
+    router.push({ name: 'UserProfile' })
+  } else {
+    router.push({ name: 'Login' })
+  }
+}
 
 </script>
 
@@ -29,8 +45,12 @@ const productButtonClass = computed(() => {
       </v-col>
       <v-col cols="2" offset="1">
         <v-toolbar-items>
-          <v-btn class="custom-btn"><v-icon>mdi-cart</v-icon></v-btn>
-          <router-link to="/login" class="custom-link"><v-btn class="custom-btn"><v-icon>mdi-account</v-icon></v-btn></router-link>
+          <router-link to="/" class="custom-link">
+            <v-btn v-if="!isAdmin" class="custom-btn"><v-icon>mdi-cart</v-icon></v-btn>
+          </router-link>
+          
+          <v-btn class="custom-btn" @click="handleAccountClick"><v-icon>mdi-account</v-icon></v-btn>
+          
         </v-toolbar-items>
       </v-col>
     </v-row>
