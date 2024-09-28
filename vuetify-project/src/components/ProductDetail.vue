@@ -1,4 +1,6 @@
 <script lang="ts" setup>
+import { ref } from 'vue';
+import router from '@/router';
 
 const props = defineProps({
     product: {
@@ -6,6 +8,13 @@ const props = defineProps({
         required: true
     }
 })
+const isEdit = ref(false);
+
+const goToEdit = () => {
+    isEdit.value = true
+    //setTimeout(() => (load.value = false), 2000)
+    router.push({ name: 'EditProduct', params: { id: props.product.id } });
+}
 </script>
 
 <template>
@@ -27,7 +36,7 @@ const props = defineProps({
                 <h3>Price: $ {{ props.product.price }}</h3>
             </div>
                     
-            <v-btn width="min-content" class="ml-auto">Editar</v-btn>
+            <v-btn width="min-content" class="ml-auto" @click="goToEdit">Editar</v-btn>
         </v-col>
     </v-row>
 </template>

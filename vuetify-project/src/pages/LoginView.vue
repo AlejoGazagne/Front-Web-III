@@ -32,11 +32,8 @@ const submit = async () => {
       setTimeout(() => {
         load.value = false;
         if (user.length > 0) {
-          if (user[0].role === 'admin'){
-            localStorage.setItem('token', `admin,${user[0].id}`);
-          } else {
-            localStorage.setItem('token', `user,${user[0].id}`);
-          }
+         
+          localStorage.setItem('token', `${user[0].role},${user[0].id}`);          
           router.push({ name: 'Home' });
         }
       }, 1000)
