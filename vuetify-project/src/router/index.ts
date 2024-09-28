@@ -5,7 +5,8 @@
  */
 
 // Composables
-import { createRouter, createWebHistory } from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router/auto'
+import { useUserStore } from '@/stores/useUserStore'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -26,6 +27,34 @@ const router = createRouter({
       component: () => import('../pages/ProductsView.vue')
     },
     {
+      path: "/add-product",
+      name: "AddProduct",
+      component: () => import('../pages/AddProductView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        userStore.checkRole();
+        if (userStore.role !== 'admin') {
+          next({ name: 'Home' });
+        } else {
+          next();
+        }
+      }
+    },
+    {
+      path: "/edit-product/:id",
+      name: "EditProduct",
+      component: () => import('../pages/EditProductView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        userStore.checkRole();
+        if (userStore.role !== 'admin') {
+          next({ name: 'Home' });
+        } else {
+          next();
+        }
+      }
+    },
+    {
       path: "/login",
       name: "Login",
       component: () => import('../pages/LoginView.vue')
@@ -37,25 +66,33 @@ const router = createRouter({
     },
     {
       path: "/admin",
-      children: [
-        {
-          path: "",
-          name: "AdminProfile",
-          component: () => import('../pages/AdminProfileView.vue')
-        },
-      ],
-      meta: { requiresAuth: true, isAdmin: true }
+      name: "AdminProfile",
+      component: () => import('../pages/AdminProfileView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        userStore.checkRole();
+        if (userStore.role !== 'admin') {
+          next({ name: 'Home' });
+        } else {
+          next();
+        }
+      }
+      
     },
     {
       path: "/user",
-      children: [
-        {
-          path: "",
-          name: "UserProfile",
-          component: () => import('../pages/UserProfileView.vue')
+      name: "UserProfile",
+      component: () => import('../pages/UserProfileView.vue'),
+      beforeEnter: (to, from, next) => {
+        const userStore = useUserStore();
+        userStore.checkRole();
+        if (userStore.role !== 'user') {
+          next({ name: 'Home' });
+        } else {
+          next();
         }
-      ],
-      meta: { requiresAuth: true }
+      }
+
     },
   ]
 })
@@ -77,10 +114,6 @@ router.onError((err, to) => {
 
 router.isReady().then(() => {
   localStorage.removeItem('vuetify:dynamic-reload')
-})
-
-router.beforeEach((to, from, next) => {
-  
 })
 
 export default router

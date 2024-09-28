@@ -10,10 +10,8 @@ import Footer from '@/components/Footer.vue'
         <NavBar />
     </header>
     <div>
-        <v-col cols="10" offset="1">
-            <h1>Products</h1>
-            <ProductsList />
-        </v-col>
+        <h1>Products</h1>
+        <ProductsList />
     </div>
     <footer>
         <Footer />

@@ -1,6 +1,9 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import router from '@/router';
+import { useUserStore } from '@/stores/useUserStore';
+
+const userStore = useUserStore();
 
 const props = defineProps({
     product: {
@@ -9,6 +12,8 @@ const props = defineProps({
     }
 })
 const isEdit = ref(false);
+console.log("admin check")
+console.log(userStore.isAdmin())
 
 const goToEdit = () => {
     isEdit.value = true
@@ -36,7 +41,7 @@ const goToEdit = () => {
                 <h3>Price: $ {{ props.product.price }}</h3>
             </div>
                     
-            <v-btn width="min-content" class="ml-auto" @click="goToEdit">Editar</v-btn>
+            <v-btn v-if="userStore.isAdmin()" width="min-content" class="ml-auto" @click="goToEdit">Editar</v-btn>
         </v-col>
     </v-row>
 </template>

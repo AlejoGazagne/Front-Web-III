@@ -1,30 +1,7 @@
-<script lang="ts" setup>
-import router from '@/router';
-import { ref } from 'vue'
-
-const load = ref(false)
-
-const viewMore = () => {
-    load.value = true
-    setTimeout(() => {
-        load.value = false
-        router.push({ name: 'ProductDetail', params: { id: props.product.id } });
-    }, 1000)
-}
-
-const props = defineProps({
-    product: {
-        type: Object,
-        required: true
-    }
-})
-
-</script>
-
 <template>
     <v-card :disabled="load" :isLoading="load" class="mx-auto my-12 product-card" max-width="280">
         <template v-slot:loader="{ isActive }">
-            <v-progress-linear :active="isActive" color="deep-purple" height="7" indeterminate></v-progress-linear>
+            <v-progress-linear :active="isActive" color="deep-purple" height="4" indeterminate></v-progress-linear>
         </template>
 
         <v-img height="250" :src=props.product.image alt="Imagen producto" cover></v-img>
@@ -58,19 +35,25 @@ const props = defineProps({
         </v-card-actions>
     </v-card>
 </template>
+<script lang="ts" setup>
+import router from '@/router';
+import { ref } from 'vue'
 
-<style scoped>
-.product-card {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
+const load = ref(false)
+const props = defineProps({
+    product: {
+        type: Object,
+        required: true
+    }
+})
+const viewMore = () => {
+    load.value = true
+    setTimeout(() => { 
+        load.value = false     
+        router.push({ name: 'ProductDetail', params: { id: props.product.id } });
+    }, 2000)
 }
 
-.product-card .v-card-text {
-    flex-grow: 1;
-}
 
-.product-card .v-card-actions {
-    margin-top: auto;
-}
-</style>
+
+</script>

@@ -32,7 +32,6 @@ const submit = async () => {
       setTimeout(() => {
         load.value = false;
         if (user.length > 0) {
-         
           localStorage.setItem('token', `${user[0].role},${user[0].id}`);          
           router.push({ name: 'Home' });
         }

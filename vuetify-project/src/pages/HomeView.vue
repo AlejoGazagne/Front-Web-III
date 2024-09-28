@@ -11,6 +11,8 @@ onMounted(() => {
   productStore.fetchProducts();
 });
 
+console.log("probando ")
+
 const topProducts = computed(() => {
   return products.value.slice().sort((a, b) => b.rating.rate - a.rating.rate).slice(0, 3);
 });
