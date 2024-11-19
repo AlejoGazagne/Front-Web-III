@@ -1,11 +1,55 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
+import { useUserStore } from '../stores/useUserStore';
+
+/*defineProps({
+  isLoggedIn:{
+    type: Boolean,
+    required: true
+  },
+  userName: {
+    type: String,
+    default: ''
+  },
+  userRole: {
+    type: String,
+    default: ''
+  }
+});*/
 
 // Variables reactivas
 const searchQuery = ref<string>(''); // Control del texto de búsqueda
 const userName = ref<string>('Darren Saunders'); // Nombre del usuario
 const userRole = ref<string>('Admin'); // Rol del usuario
+const isLoggedIn = ref(false);
+const router = useRouter();
+const userStore = useUserStore();
+const goToLogin = () => {
+  
+  router.push('/login');
+}
+onMounted(() => {
+  isLoggedIn.value = userStore.isLoggedInCheck();
+  
+});
 
+const dropdownVisible = ref(false); // Toggles dropdown visibility
+
+function toggleDropdown() {
+  dropdownVisible.value = !dropdownVisible.value;
+}
+
+function goToProfile(){
+  router.push('/profile');
+}
+
+function handleLogout() {
+  userStore.logout(); // Perform the logout operation
+  dropdownVisible.value = false; // Close the dropdown
+  router.push('/');
+}
+console.log(userStore.isLoggedIn);
 </script>
 
 <template>
@@ -55,8 +99,23 @@ const userRole = ref<string>('Admin'); // Rol del usuario
             </v-avatar>
 
             <div class="text-right">
-              <div class="text-body-1 font-weight-bold">{{ userName }}</div>
-              <div class="text-caption">{{ userRole }}</div>
+              <template v-if="userStore.isLoggedInCheck()">
+                <div class="text-body-1 font-weight-bold" @click="toggleDropdown">{{ userName }}</div>
+                <div class="text-caption" @click="toggleDropdown">{{ userRole }}</div>
+                <v-menu v-if="dropdownVisible" activator="parent" offset-y>
+                  <v-list>
+                    <v-list-item>
+                      <v-btn @click="goToProfile">Profile</v-btn>
+                    </v-list-item>
+                    <v-list-item>
+                      <v-btn text-color="error" @click="handleLogout">Logout</v-btn>
+                    </v-list-item>
+                  </v-list>
+                </v-menu>
+              </template>
+              <template v-else>
+                <v-btn color="primary" @click="goToLogin">Log In</v-btn>
+              </template>
             </div>
           </v-btn>
         </div>

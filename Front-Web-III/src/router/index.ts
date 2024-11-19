@@ -9,6 +9,16 @@ const router = createRouter({
       name: 'home',
       component: HomeView,
     },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('../views/LoginView.vue'),
+    },
+    {
+      path: '/validate-password',
+      name: 'validate-password',
+      component: () => import('../views/ValidatePasswordView.vue'),
+    }
   ],
 })
 
