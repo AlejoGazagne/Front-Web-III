@@ -18,7 +18,18 @@ const router = createRouter({
       path: '/validate-password',
       name: 'validate-password',
       component: () => import('../views/ValidatePasswordView.vue'),
+    },
+    {
+      path: '/register-first-weighing',
+      name: 'register-first-weighing',
+      component: () => import('../views/RegisterFirstWeighingView.vue'),
+    },
+    {
+      path: '/load-truck',
+      name: 'load-truck',
+      component: () => import('../views/LoadTruckView.vue'),
     }
+
   ],
 })
 

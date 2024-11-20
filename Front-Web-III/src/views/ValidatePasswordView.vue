@@ -9,7 +9,6 @@ import Validation from '@/components/Validation.vue';
     <v-app-bar app clipped >
       <Header />
     </v-app-bar>
-
     <v-navigation-drawer :width="217" permanent>
       <Menu />
     </v-navigation-drawer>

@@ -17,6 +17,11 @@ const items = ref([
     text: 'Register First Weighing',
     icon: 'mdi-truck',
     action: () => router.push('/register-first-weighing'), // Define action for the button
+  },
+  {
+    text: 'Truck Loading Service',
+    icon: 'mdi-truck',
+    action: () => router.push('/load-truck'), // Define action for the button
   }
 ]);
 </script>
