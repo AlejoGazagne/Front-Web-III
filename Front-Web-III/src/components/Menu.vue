@@ -13,6 +13,11 @@ const items = ref([
     icon: 'mdi-key',
     action: () => router.push('/validate-password'), // Define action for the button
   },
+  {
+    text: 'Register First Weighing',
+    icon: 'mdi-truck',
+    action: () => router.push('/register-first-weighing'), // Define action for the button
+  }
 ]);
 </script>
 

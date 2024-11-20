@@ -44,7 +44,8 @@ const submit = async () => {
       setTimeout(() => {
         load.value = false;
         if (token) {
-          userStore.login(token)
+          //userStore.login(token)
+          localStorage.setItem('token', token);
           router.push('/');
         } else {
           errorMessage.value = 'Usuario o contraseña incorrecto, vuelva a intentar';

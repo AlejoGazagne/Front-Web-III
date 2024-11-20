@@ -49,7 +49,7 @@ function handleLogout() {
   dropdownVisible.value = false; // Close the dropdown
   router.push('/');
 }
-console.log(userStore.isLoggedIn);
+console.log( await userStore.isLoggedInCheck());
 </script>
 
 <template>
