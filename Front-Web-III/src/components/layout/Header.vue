@@ -1,10 +1,10 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/useUserStore';
+import { useAuthStore } from '../../stores/userAuthStore';
 
 const router = useRouter();
-const userStore = useUserStore();
+const userAuthStore = useAuthStore();
 
 /*defineProps({
   isLoggedIn:{
@@ -29,18 +29,17 @@ const showMenu = ref<boolean>(false); // Controla la visibilidad del menú
 const isLoggedIn = ref(false);
 
 
-onMounted(() => {
-  isLoggedIn.value = userStore.isLoggedInCheck();
-  
-});
+// onMounted(() => {
+//   isLoggedIn.value = userAuthStore.isLoggedInCheck();
+// });
 
 function goToProfile(){
   router.push('/profile');
 }
 
 function handleLogout() {
-  userStore.logout(); // Perform the logout operation
-  router.push('/');
+  userAuthStore.clearAuth();
+  router.push('/login');
 }
 
 </script>
@@ -51,7 +50,7 @@ function handleLogout() {
       <v-row class="align-center d-flex justify-space-between" no-gutters>
         <!-- Logo y título -->
         <v-col cols="2" class="d-flex align-center">
-          <img src="../assets/sin-fondo.webp" alt="Logo empresa" width="90px">
+          <img src="../../assets/sin-fondo.webp" alt="Logo empresa" width="90px">
           <span class="mx-5 text-title-1 font-weight-bold">Nombre empresa</span>
         </v-col>
         <!-- Barra de búsqueda
@@ -101,7 +100,7 @@ function handleLogout() {
               <v-list-item link @click="goToProfile">
                 <v-list-item-title>Mi Perfil</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="logout">
+              <v-list-item link @click="handleLogout">
                 <v-list-item-title>Cerrar sesión</v-list-item-title>
               </v-list-item>
             </v-list>

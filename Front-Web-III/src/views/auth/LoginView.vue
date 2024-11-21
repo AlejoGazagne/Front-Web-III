@@ -1,13 +1,15 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/useUserStore';
+import { useAuthStore } from '../../stores/userAuthStore';
+import { login } from '../../services/authService';
+
+const router = useRouter();
+const userStore = useAuthStore();
 
 const username = ref('');
 const password = ref('');
 const valid = ref(false);
-const router = useRouter();
-const userStore = useUserStore();
 const load = ref(false);
 const errorMessage = ref('');
 
@@ -24,7 +26,6 @@ const passwordRules = [
 const submit = async () => {
   load.value = true;
   errorMessage.value = ''; // Clear any previous error message
-  console.log("aver");
   console.log(username);
   console.log(password);
   if (valid.value) {
@@ -35,9 +36,7 @@ const submit = async () => {
       if (!response.ok) {
         throw new Error('Error en la petición');
       }
-      console.log("que pingo pasa")
-      console.log(response);
-      //const user = await response.json();
+
       const token = await response.text();
       console.log(token);
 
@@ -45,6 +44,8 @@ const submit = async () => {
         load.value = false;
         if (token) {
           //userStore.login(token)
+          userStore.setToken(token);
+          // TODO: agregar en el back que devuelva el nombre de usuario, nombre, id...
           localStorage.setItem('token', token);
           router.push('/');
         } else {
@@ -59,17 +60,14 @@ const submit = async () => {
   }
 };
 
-const goToRegister = () => {
-  router.push('/register');
-};
 </script>
 
 <template>
 <v-container class="d-flex flex-column justify-center align-center" style="height: 100vh;">
     <v-card :disabled="load" :isLoading="load" class="pa-6" width="500" elevation="4">
       <template v-slot:loader="{ isActive }">
-            <v-progress-linear :active="isActive" color="deep-purple" height="7" indeterminate></v-progress-linear>
-        </template>
+        <v-progress-linear :active="isActive" color="deep-purple" height="7" indeterminate></v-progress-linear>
+      </template>
       <v-card-title>Login</v-card-title>
       
       <v-card-text>
@@ -102,21 +100,18 @@ const goToRegister = () => {
         <v-btn color="primary" @click="submit" :disabled="!valid" test-tag="submit-button">Login</v-btn>
       </v-card-actions>
 
-      <v-card-subtitle class="mt-2">
-        <small>No tienes una cuenta? <v-btn text="" class="ml-7 rgt" @click="goToRegister">Registrarse</v-btn></small>
-      </v-card-subtitle>
     </v-card>
   </v-container>
 </template>
 
 <style scoped>
 .rgt {
-    border: 1px solid #dfdfdf;
-    border-radius: 5px;
+  border: 1px solid #dfdfdf;
+  border-radius: 5px;
 }
 
 .input-field :focus-within {
-    background-color: rgb(201, 246, 249) ;
+  background-color: rgb(201, 246, 249) ;
 }
 
 </style>
