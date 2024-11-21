@@ -3,7 +3,7 @@
 </script>
 
 <template>
-  <h1>Dashboard view</h1>
+  <h1>Profile view</h1>
 </template>
 
 <style scoped>

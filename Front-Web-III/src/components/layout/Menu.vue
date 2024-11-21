@@ -1,13 +1,32 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
+import { useAuthStore } from '../../stores/userAuthStore';
 
 const router = useRouter();
+const authStore = useAuthStore();
 
-const items = ref([
-  { text: 'Orders', icon: 'mdi-truck', action: () => router.push('/'), },
-  { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/add-product'), }
-]);
+const items = computed(() => {
+  const role = authStore.userRole;
+  const commonItems = [
+    { text: 'Orders', icon: 'mdi-truck', action: () => router.push('/'), },
+    { text: 'Dashboard', icon: 'mdi-view-dashboard', action: () => router.push('/dashboard'), },
+  ];
+
+  if (role === 'Admin') {
+    return [
+      ...commonItems,
+      { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin'), },
+    ];
+  } else if (role === 'User') {
+    return [
+      ...commonItems,
+      { text: 'Profile', icon: 'mdi-account', action: () => router.push('/profile'), },// TODO: agregar ruta y componente
+    ];
+  } else {
+    return commonItems;
+  }
+});
 
 </script>
 
