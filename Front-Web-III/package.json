@@ -20,6 +20,7 @@
     "@stomp/stompjs": "^7.0.0",
     "@types/stompjs": "^2.3.9",
     "@vue/compiler-sfc": "^3.5.13",
+    "axios": "^1.7.7",
     "jwt-decode": "^4.0.0",
     "nuxt": "^3.14.159",
     "nuxt-icon": "^1.0.0-beta.7",
