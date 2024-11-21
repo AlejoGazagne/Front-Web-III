@@ -3,6 +3,9 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useUserStore } from '../stores/useUserStore';
 
+const router = useRouter();
+const userStore = useUserStore();
+
 /*defineProps({
   isLoggedIn:{
     type: Boolean,
@@ -18,27 +21,18 @@ import { useUserStore } from '../stores/useUserStore';
   }
 });*/
 
-// Variables reactivas
+// Variables 
 const searchQuery = ref<string>(''); // Control del texto de búsqueda
 const userName = ref<string>('Darren Saunders'); // Nombre del usuario
 const userRole = ref<string>('Admin'); // Rol del usuario
+const showMenu = ref<boolean>(false); // Controla la visibilidad del menú
 const isLoggedIn = ref(false);
-const router = useRouter();
-const userStore = useUserStore();
-const goToLogin = () => {
-  
-  router.push('/login');
-}
+
+
 onMounted(() => {
   isLoggedIn.value = userStore.isLoggedInCheck();
   
 });
-
-const dropdownVisible = ref(false); // Toggles dropdown visibility
-
-function toggleDropdown() {
-  dropdownVisible.value = !dropdownVisible.value;
-}
 
 function goToProfile(){
   router.push('/profile');
@@ -46,15 +40,14 @@ function goToProfile(){
 
 function handleLogout() {
   userStore.logout(); // Perform the logout operation
-  dropdownVisible.value = false; // Close the dropdown
   router.push('/');
 }
-console.log( await userStore.isLoggedInCheck());
+
 </script>
 
 <template>
   <v-app>
-    <v-app-bar app dense flat class="top-bar px-5">
+    <v-app-bar app dense flat class="top-bar px-15">
       <v-row class="align-center d-flex justify-space-between" no-gutters>
         <!-- Logo y título -->
         <v-col cols="2" class="d-flex align-center">
@@ -78,46 +71,41 @@ console.log( await userStore.isLoggedInCheck());
         </v-col> -->
 
         <!-- Perfil del usuario -->
-        <div class="d-flex justify-end">
-          <v-btn class="text-none" height="50px" stacked>
+        <div class="d-flex section-right">
+          <v-btn class="text-none btn" height="50px" stacked>
             <v-badge color="error" content="2">
               <svg xmlns="http://www.w3.org/2000/svg" width="25" height="25" viewBox="0 0 24 24"><path fill="currentColor" d="M5 19q-.425 0-.712-.288T4 18t.288-.712T5 17h1v-7q0-2.075 1.25-3.687T10.5 4.2v-.7q0-.625.438-1.062T12 2t1.063.438T13.5 3.5v.7q2 .5 3.25 2.113T18 10v7h1q.425 0 .713.288T20 18t-.288.713T19 19zm7 3q-.825 0-1.412-.587T10 20h4q0 .825-.587 1.413T12 22m-4-5h8v-7q0-1.65-1.175-2.825T12 6T9.175 7.175T8 10z"/></svg>
             </v-badge>
           </v-btn>
 
-          <v-btn height="50px">
-            <v-avatar class="mr-3">
-              <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
-                <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="1.008"></g>
-                <g id="SVGRepo_iconCarrier">
-                  <circle cx="12" cy="9" r="3" stroke="#1C274C" stroke-width="1.08"></circle>
-                  <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="#1C274C" stroke-width="1.08" stroke-linecap="round"></path> 
-                  <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#1C274C" stroke-width="1.08" stroke-linecap="round"></path> 
-                </g>
-              </svg>
-            </v-avatar>
+          <v-menu v-model="showMenu" bottom offset-y >
+            <template #activator="{ props }">
+              <v-btn height="50px" class="btn d-flex align-center" v-bind="props">
+                <v-avatar class="mr-3">
+                  <svg viewBox="0 0 24.00 24.00" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <g id="SVGRepo_iconCarrier">
+                      <circle cx="12" cy="9" r="3" stroke="#1C274C" stroke-width="1.08"></circle>
+                      <path d="M17.9691 20C17.81 17.1085 16.9247 15 11.9999 15C7.07521 15 6.18991 17.1085 6.03076 20" stroke="#1C274C" stroke-width="1.08" stroke-linecap="round"></path>
+                      <path d="M7 3.33782C8.47087 2.48697 10.1786 2 12 2C17.5228 2 22 6.47715 22 12C22 17.5228 17.5228 22 12 22C6.47715 22 2 17.5228 2 12C2 10.1786 2.48697 8.47087 3.33782 7" stroke="#1C274C" stroke-width="1.08" stroke-linecap="round"></path>
+                    </g>
+                  </svg>
+                </v-avatar>
+                <div class="text-right">
+                  <div class="text-body-1 font-weight-bold">{{ userName }}</div>
+                  <div class="text-caption">{{ userRole }}</div>
+                </div>
+              </v-btn>
+            </template>
 
-            <div class="text-right">
-              <template v-if="userStore.isLoggedInCheck()">
-                <div class="text-body-1 font-weight-bold" @click="toggleDropdown">{{ userName }}</div>
-                <div class="text-caption" @click="toggleDropdown">{{ userRole }}</div>
-                <v-menu v-if="dropdownVisible" activator="parent" offset-y>
-                  <v-list>
-                    <v-list-item>
-                      <v-btn @click="goToProfile">Profile</v-btn>
-                    </v-list-item>
-                    <v-list-item>
-                      <v-btn text-color="error" @click="handleLogout">Logout</v-btn>
-                    </v-list-item>
-                  </v-list>
-                </v-menu>
-              </template>
-              <template v-else>
-                <v-btn color="primary" @click="goToLogin">Log In</v-btn>
-              </template>
-            </div>
-          </v-btn>
+            <v-list>
+              <v-list-item link @click="goToProfile">
+                <v-list-item-title>Mi Perfil</v-list-item-title>
+              </v-list-item>
+              <v-list-item link @click="logout">
+                <v-list-item-title>Cerrar sesión</v-list-item-title>
+              </v-list-item>
+            </v-list>
+          </v-menu>
         </div>
       </v-row>
     </v-app-bar>
@@ -125,6 +113,21 @@ console.log( await userStore.isLoggedInCheck());
 </template>
 
 <style scoped>
+.prueba {
+  width: 10rem;
+}
+
+.section-right{
+  width: 20rem;
+  justify-content: space-between;
+}
+
+.btn{
+  border: 1px solid #dddddd;
+  box-shadow: 0 0 10px rgb(212, 212, 212);
+  border-radius: 5px;
+}
+
 .top-bar {
   background-color: #ffffff;
   border-bottom: 1px solid #e6e6e6;

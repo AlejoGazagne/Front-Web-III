@@ -15,9 +15,7 @@ const preset = ref('');
             <Header />
         </v-app-bar>
 
-        <v-navigation-drawer :width="217" permanent>
-            <Menu />
-        </v-navigation-drawer>
+        <Menu />
         <v-main>
             <v-container>
                 <h1>Realtime Loading</h1>
