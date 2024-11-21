@@ -8,7 +8,7 @@ export const useUserStore = defineStore('user', () => {
     
     const login= async (extToken) => {
         token.value = extToken;
-        localStorage.setItem('token', extToken);               
+        localStorage.setItem('token', extToken);
     };
 
     const logout =  () => {
