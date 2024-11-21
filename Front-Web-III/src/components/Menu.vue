@@ -22,6 +22,15 @@ const items = ref([
     text: 'Truck Loading Service',
     icon: 'mdi-truck',
     action: () => router.push('/load-truck'), // Define action for the button
+  },
+  {
+    text: 'Register Final Weighing Service',
+    icon: 'mdi-truck',
+    action: () => router.push('/register-final-weighing'), // Define action for the button
+  },
+  {
+    text: 'Close Order',
+    action: () => router.push('/close-order'),
   }
 ]);
 </script>

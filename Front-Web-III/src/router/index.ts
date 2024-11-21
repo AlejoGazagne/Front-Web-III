@@ -28,6 +28,16 @@ const router = createRouter({
       path: '/load-truck',
       name: 'load-truck',
       component: () => import('../views/LoadTruckView.vue'),
+    },
+    {
+      path: '/register-final-weighing',
+      name: 'register-final-weighing',
+      component: () => import('../views/RegisterFinalWeighingView.vue'),
+    },
+    {
+      path: '/close-order',
+      name: 'close-order',
+      component: () => import('../views/CloseOrderView.vue'),
     }
 
   ],
