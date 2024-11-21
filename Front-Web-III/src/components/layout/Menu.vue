@@ -6,6 +6,7 @@ const router = useRouter();
 
 const items = ref([
   { text: 'Orders', icon: 'mdi-truck', action: () => router.push('/'), },
+  { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/add-product'), }
 ]);
 
 </script>

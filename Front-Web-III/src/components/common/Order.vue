@@ -10,16 +10,18 @@ const props = defineProps({
 
 const getStatusColor = (status: string) => { // acomodar para los estados de la base de datos
   switch (status) {
-    case 'Pending':
+    case 'RECEIVED':
       return 'blue';
-    case 'Received':
+    case 'FIRST_WEIGHING':
       return 'green';
-    case 'Completed':
-      return 'Red';
+    case 'CHARGED':
+      return 'orange';
     default:
       return 'grey';
   }
 };
+
+
 </script>
 
 <template>
@@ -27,38 +29,38 @@ const getStatusColor = (status: string) => { // acomodar para los estados de la 
       <!-- Order ID -->
       <div class="col">
         <p class="item" >Id Order</p>
-        <strong>#94268346</strong>
+        <strong>{{props.order.id}}</strong>
       </div>
 
       <!-- Order assigned to -->
       <div class="col">
         <p class="item" >Producto</p>
-        Lisa Collins
+        {{ props.order.product.name }}
       </div>
 
       <!-- Pickup address -->
       <div class="col">
-        <p class="item" >Fecha entrada</p>
-        Lyon, FR
+        <p class="item" >Fecha Entrada</p>
+        {{ new Date(props.order.dateReceived).toLocaleDateString('en-GB') }}
       </div>
 
       <!-- Delivery address -->
       <div class="col">
         <p class="item" >Cliente</p>
-        Milan, IT
+        {{props.order.client.companyName}}
       </div>
 
       <!-- Expire at -->
       <div class="col">
-        <p class="item" >Fecha Finalización</p>
-        18 Sep, 2024
+        <p class="item" >Fecha Fin</p>
+        {{ props.order.dateFinalWeighing ? new Date(props.order.dateFinalWeighing).toLocaleDateString('en-GB') : 'N/A' }}
       </div>
 
       <!-- Status -->
       <div class="d-flex flex-column align-center col">
         <p class="item">Estado</p>
-        <v-chip :color="getStatusColor(order.status)" text-color="white">
-          {{ order.status }}
+        <v-chip :color="getStatusColor(props.order.state)" text-color="white">
+          {{ props.order.state }}
         </v-chip>
       </div>
 

@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/useUserStore';
+import { useUserStore } from '@/stores/useUserStore';
 
 const router = useRouter();
 const userStore = useUserStore();
@@ -40,7 +40,7 @@ function goToProfile(){
 
 function handleLogout() {
   userStore.logout(); // Perform the logout operation
-  router.push('/');
+  router.push('/login');
 }
 
 </script>
@@ -101,7 +101,7 @@ function handleLogout() {
               <v-list-item link @click="goToProfile">
                 <v-list-item-title>Mi Perfil</v-list-item-title>
               </v-list-item>
-              <v-list-item link @click="logout">
+              <v-list-item link @click="handleLogout">
                 <v-list-item-title>Cerrar sesión</v-list-item-title>
               </v-list-item>
             </v-list>

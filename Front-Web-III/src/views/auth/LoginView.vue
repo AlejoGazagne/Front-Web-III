@@ -1,7 +1,7 @@
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
-import { useUserStore } from '../stores/useUserStore';
+import { useUserStore } from '@/stores/useUserStore';
 
 const username = ref('');
 const password = ref('');
@@ -35,7 +35,7 @@ const submit = async () => {
       if (!response.ok) {
         throw new Error('Error en la petición');
       }
-      console.log("que pingo pasa")
+      //console.log("que pingo pasa")
       console.log(response);
       //const user = await response.json();
       const token = await response.text();

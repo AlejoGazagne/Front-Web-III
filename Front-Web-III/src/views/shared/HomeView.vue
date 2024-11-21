@@ -1,32 +1,26 @@
 <script setup lang="ts">
-import Header from '@/components/Header.vue';
-import Menu from '@/components/Menu.vue';
-import Order from '@/components/Order.vue';
-import { ref } from 'vue';
+import Header from '@/components/layout/Header.vue';
+import Menu from '@/components/layout/Menu.vue';
+import Order from '@/components/common/Order.vue';
+import { onMounted, ref } from 'vue';
 
 // Lista de órdenes
-const orders = ref([
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-  { id: 1, orderId: '123', assignedTo: 'John Doe', pickupAddress: '123 Main St', deliveryAddress: '456 Elm St', expectedAt: '2023-10-01', status: 'Pending' },
-  { id: 2, orderId: '124', assignedTo: 'Jane Smith', pickupAddress: '789 Oak St', deliveryAddress: '101 Pine St', expectedAt: '2023-10-02', status: 'Completed' },
-   // Más órdenes...
-]);
+const orders = ref([]);
 
+async function getOrders() {
+  const response = await fetch('http://localhost:8080/api/v1/sap/orders', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+  orders.value = await response.json();
+}
+
+onMounted(() => {
+  getOrders();
+});
 
 </script>
 

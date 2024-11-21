@@ -33,4 +33,5 @@ export const useAuthStore = defineStore('auth', {
       localStorage.removeItem('userData');
     },
   },
+  
 });
