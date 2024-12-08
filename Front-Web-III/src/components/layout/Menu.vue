@@ -1,24 +1,25 @@
 <script lang="ts" setup>
 import { ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
-import { useAuthStore } from '../../stores/userAuthStore';
+import { useAuthStore } from '../../stores/useAuthStore';
 
 const router = useRouter();
 const authStore = useAuthStore();
 
 const items = computed(() => {
-  const role = authStore.userRole;
+  const roles = authStore.getRoles;
   const commonItems = [
     { text: 'Orders', icon: 'mdi-truck', action: () => router.push('/'), },
-    { text: 'Dashboard', icon: 'mdi-view-dashboard', action: () => router.push('/dashboard'), },
+    { text: 'Dashboard', icon: 'mdi-chart-box-outline', action: () => router.push('/dashboard'), },
   ];
 
-  if (role === 'Admin') {
+  if (roles.includes('ROLE_ADMIN')) {
     return [
       ...commonItems,
       { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin'), },
+      { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/add-product'), },
     ];
-  } else if (role === 'User') {
+  } else if (roles.includes('Operator')) {
     return [
       ...commonItems,
       { text: 'Profile', icon: 'mdi-account', action: () => router.push('/profile'), },// TODO: agregar ruta y componente
@@ -32,7 +33,7 @@ const items = computed(() => {
 
 <template>
   <div>
-    <v-navigation-drawer class="pt-3" app :width="325" permanent>
+    <v-navigation-drawer class="pt-3" app :width="280" permanent>
       <v-list>
         <v-list-item v-for="(item, i) in items" :key="i" class="cursor-pointer"
           :clickable="!!item.action" @click="item.action && item.action()" >

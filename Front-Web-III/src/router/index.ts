@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import { useAuthStore } from '../stores/userAuthStore';
+import { useAuthStore } from '../stores/useAuthStore';
 
 const routes = [
   // Rutas de autenticación
@@ -10,7 +10,7 @@ const routes = [
   // Rutas del administrador
   {
     path: '/admin',
-    component: () => import('@/views/admin/AddProductView.vue'), // Cambiar por la vista del admin
+    component: () => import('@/views/admin/AddProductView.vue'), // Cambiar por la primer vista del admin
     children: [
       {
         path: 'dashboard',
@@ -41,6 +41,11 @@ const routes = [
     component: () => import('../views/shared/ProfileView.vue'),
     meta: { requiresAuth: true },
   },
+  {
+    path: '/order/:id',
+    name: 'OrderDetail',
+    component: () => import('../views/shared/OrderDetailView.vue'),
+  }
 ];
 
 const router = createRouter({
