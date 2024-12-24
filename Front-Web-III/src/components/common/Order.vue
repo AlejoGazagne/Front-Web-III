@@ -1,5 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const props = defineProps({
   order: {
@@ -8,24 +11,29 @@ const props = defineProps({
   },
 });
 
-const getStatusColor = (status: string) => { // acomodar para los estados de la base de datos
+const getStatusColor = (status: string) => {
   switch (status) {
     case 'RECEIVED':
       return 'blue';
     case 'FIRST_WEIGHING':
-      return 'green';
+      return 'yellow';
     case 'CHARGED':
       return 'orange';
+    case 'FINAL_WEIGHING':
+      return 'green';
     default:
       return 'grey';
   }
 };
 
+const goToOrderDetail = () => {
+  router.push({ name: 'OrderDetail', params: { id: props.order.id } });
+};
 
 </script>
 
 <template>
-  <div class="d-flex align-center  justify-space-between order px-6 object">
+  <div class="d-flex align-center justify-space-between order px-6 object">
       <!-- Order ID -->
       <div class="col">
         <p class="item" >Id Order</p>
@@ -59,14 +67,14 @@ const getStatusColor = (status: string) => { // acomodar para los estados de la 
       <!-- Status -->
       <div class="d-flex flex-column align-center col">
         <p class="item">Estado</p>
-        <v-chip :color="getStatusColor(props.order.state)" text-color="white">
-          {{ props.order.state }}
+        <v-chip :color="getStatusColor(props.order.status)" text-color="white">
+          {{ props.order.status }}
         </v-chip>
       </div>
 
       <!-- See more button -->
       <div class="text-right col">
-        <v-btn text color="primary">
+        <v-btn text color="primary" @click="goToOrderDetail" >
           Ver más
         </v-btn>
       </div>
@@ -84,5 +92,12 @@ const getStatusColor = (status: string) => { // acomodar para los estados de la 
 }
 .object{
   width: 98%;
+}
+.order{
+  height: 5rem;
+  border-radius: 10px;
+  margin-bottom: 1.3rem;
+  border: 1px solid #d6d6d6;
+  box-shadow: 0 0 10px #d4d4d4;
 }
 </style>

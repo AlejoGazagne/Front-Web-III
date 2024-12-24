@@ -1,10 +1,10 @@
 import axios from 'axios';
 
-const API_BASE_URL = 'http://localhost:8080/api/v1/';
+const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable de entorno
 
-export const login = async (email: string, password: string) => {
+export const login = async (username: string, password: string) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/login`, { email, password });
+    const response = await axios.post(`${API_BASE_URL}/login?username=${username}&password=${password}`);
     return response.data;
   } catch (error) {
     handleError(error);
