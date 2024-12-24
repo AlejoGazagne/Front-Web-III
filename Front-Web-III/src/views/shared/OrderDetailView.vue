@@ -2,32 +2,29 @@
 import Header from '@/components/layout/Header.vue';
 import Menu from '@/components/layout/Menu.vue';
 import LoadingTruck from '@/components/common/LoadingTruck.vue';
-import { computed, ref, onMounted } from 'vue';
-import { useRoute } from 'vue-router';
+
+import { computed, ref, onMounted, watch } from 'vue';
 import { useOrdersStore } from '@/stores/useOrdersStore';
+import { useRoute, useRouter } from 'vue-router';
 
 const route = useRoute();
+const router = useRouter();
 const ordersStore = useOrdersStore();
 const idOrder = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 
 // Computed property que obtiene la orden del store
 const order = computed(() => ordersStore.getOrderById(idOrder));
 
+// Inicializar detalles de la orden vacío
+const detailsOrder = ref(null);
+
 onMounted(async () => {
   if (!order.value) {
-    console.log(`La orden con ID ${idOrder} no se encuentra en el store.`);
-    console.log('Se procederá a buscar la orden en el backend.');
-    try {
-      // Obtener la orden del backend y actualizar el store
-      const fetchedOrder = await ordersStore.fetchById(idOrder);
-      if (fetchedOrder) {
-        // Suponiendo que 'fetchById' devuelve la orden que deseas
-        ordersStore.setOrders([fetchedOrder]); // Actualiza el store con la nueva orden
-      }
-    } catch (error) {
-      console.error('Error al buscar la orden en el backend:', error);
-    }
+    // Obtener la orden del backend y actualizar el store
+    await ordersStore.fetchById(idOrder);
   }
+  const fetchedDetails = await ordersStore.fetchDetailOrder(idOrder);
+  detailsOrder.value = fetchedDetails;
 });
 
 const getStatusColor = (status: string) => {
@@ -45,17 +42,8 @@ const getStatusColor = (status: string) => {
   }
 };
 
-// Datos de la línea de tiempo desde el backend
-const timeline = ref([
-  { label: 'Recepción', date: '2024-11-11 23:09:35' },
-  { label: 'Primer Pesaje', date: '2024-11-11 23:15:45' },
-  { label: 'Carga Inicial', date: '2024-11-11 23:18:04' },
-  { label: 'Carga Final', date: '2024-11-11 23:19:40' },
-  { label: 'Pesaje Final', date: '2024-11-11 23:31:50' },
-]);
-
 // Formatear las fechas
-const formatDate = (date: string | null) => {
+const formatDate = (date: string | null | undefined) => {
   if (!date) return 'N/A';
   const parsedDate = new Date(date);
   return parsedDate.toLocaleDateString('es-ES', {
@@ -64,28 +52,51 @@ const formatDate = (date: string | null) => {
     year: 'numeric',
     hour: '2-digit',
     minute: '2-digit',
+    second: '2-digit',
   });
 };
 
-const parameters = ref([
-  {label: 'Densidad promedio', value: '2.5'},
-  {label: 'Temperatura promedio', value: '25'},
-  {label: 'Caudal promedio', value: '10'},
-])
+// Inicializar timeline vacío
+const timeline = ref<{ label: string; date: string }[]>([]);
 
-function delay(ms: number) {
-  return new Promise(resolve => setTimeout(resolve, ms));
-}
+// Observar cambios en order y actualizar timeline
+watch(
+  order,
+  (newOrder) => {
+    if (newOrder) {
+      timeline.value = [
+        { label: 'Recepción', date: formatDate(newOrder.dateReceived.toISOString()) },
+        { label: 'Primer Pesaje', date: formatDate(newOrder.dateFirstWeighing.toISOString()) },
+        { label: 'Carga Inicial', date: formatDate(newOrder.dateInitialCharge.toISOString()) },
+        { label: 'Carga Final', date: formatDate(newOrder.dateFinalCharge.toISOString()) },
+        { label: 'Pesaje Final', date: formatDate(newOrder.dateFinalWeighing.toISOString()) },
+      ];
+    } else {
+      timeline.value = [];
+    }
+  },
+  { immediate: true } // Para actualizar inmediatamente al montar el componente
+);
 
-// Uso de la función delay
-async function exampleFunction() {
-  console.log('Esperando 3 segundos...');
-  await delay(3000); // Espera 3 segundos
-  console.log('3 segundos han pasado.');
-  console.log(order)
-}
+const parameters = ref<{ label: string; value: number }[]>([]);
 
-exampleFunction();
+watch(detailsOrder, (newDetailsOrder) => {
+  if (newDetailsOrder) {
+    parameters.value = [
+      { label: 'Densidad promedio', value: Number(newDetailsOrder.avgDensity) },
+      { label: 'Temperatura promedio', value: Number(newDetailsOrder.avgTemperature) },
+      { label: 'Caudal promedio', value: Number(newDetailsOrder.avgCaudal) },
+    ];
+  } else {
+    parameters.value = [];
+  }
+});
+
+// Función para navegar a la página de inicio
+const goHome = () => {
+  router.push('/');
+};
+
 </script>
 
 <template>
@@ -99,20 +110,20 @@ exampleFunction();
     <!-- Contenido principal -->
     <v-main class="mt-10 ml-15 mr-15">
       <v-row class="mb-6 align-center">
-        <v-btn height="50px" class="mr-6">
+        <v-btn height="50px" class="mr-6" @click="goHome">
           <Icon icon="material-symbols:arrow-back-rounded" height="24px" />
         </v-btn>
         <p class="text-green">Order / Order Details</p>
       </v-row>
 
-      <div v-if="order && order.value">
+      <div v-if="order">
         <div class="border">
-        <v-row class="align-center justify-space-between">
+        <v-row class="align-center justify-space-between mb-3">
           <v-col cols="12" md="6" lg="8">
-            <h3 class="mb-1">Order# {{ idOrder }}</h3>
-            <!-- <v-chip :color="getStatusColor(order.state)" text-color="white">
-              {{ order.state }}
-            </v-chip> -->
+            <h3 class="mb-1">Order# {{ order.id }}</h3>
+            <v-chip :color="getStatusColor(order.status)" text-color="white" tile>
+              {{ order.status }}
+            </v-chip>
           </v-col>
 
           <v-col cols="12" md="6" lg="4" class="text-right">
@@ -124,18 +135,18 @@ exampleFunction();
         </v-row>
 
         <div>
-          <p><strong>Contraseña:</strong> {{ order?.password }}</p>
-          <p><strong>Preset:</strong> 1500</p>
+          <p><strong>Contraseña:</strong> {{ order.password }}</p>
+          <p><strong>Preset:</strong> {{ order.preset }}</p>
         </div>
 
         <v-row class="mt-4">
           <v-col cols="12" md="3">
             <p class="text-subtitle-2">Fecha Entrada: </p>
-            <p class="text-body-1">2024-02-13, 12:56</p>
+            <p class="text-body-1">{{ formatDate(order.dateReceived?.toISOString()) }}</p>
           </v-col>
           <v-col cols="12" md="3">
             <p class="text-subtitle-2">Fecha Fin:</p>
-            <p class="text-body-1">2024-02-13, 12:56</p>
+            <p class="text-body-1"> {{ formatDate(order.dateFinalWeighing?.toISOString()) }}</p>
           </v-col>
           <!-- <v-col cols="12" md="3">
             <p class="text-subtitle-2">Updated:</p>
@@ -150,9 +161,8 @@ exampleFunction();
       <v-col cols="12" md="3" class="pa-2">
         <div class="custom-box border">
           <h3 class="mb-3">Cliente</h3>
-          <p><strong>Nombre:</strong> Ana Nancy</p>
-          <p><strong>Email:</strong> example536@gmail.com</p>
-          <p><strong>Teléfono:</strong> +88016638579934</p>
+          <p><strong>id: </strong>{{ order.client.id }}</p>
+          <p><strong>Nombre: </strong>{{ order.client.companyName }}</p>
         </div>
       </v-col>
 
@@ -160,10 +170,10 @@ exampleFunction();
       <v-col cols="12" md="3" class="pa-2">
         <div class="custom-box border">
           <h3 class="mb-3">Camión</h3>
-          <p><strong>Modelo:</strong> Volvo FH16</p>
-          <p><strong>Placa:</strong> ABC-1234</p>
-          <p><strong>Tara:</strong> 2022</p>
-          <p><strong>Peso final:</strong> 2022</p>
+          <p><strong>id: </strong>{{ order.truck.id }}</p>
+          <p><strong>Placa: </strong>{{ order.truck.plate }}</p>
+          <p><strong>Tara: </strong>{{ order.tare }} <span>kg</span></p>
+          <p><strong>Peso final: </strong>{{ order.finalWeight }} <span>kg</span></p>
         </div>
       </v-col>
 
@@ -171,9 +181,10 @@ exampleFunction();
       <v-col cols="12" md="3" class="pa-2">
         <div class="custom-box border">
           <h3 class="mb-3">Chofer</h3>
-          <p><strong>Nombre:</strong> Juan Pérez</p>
-          <p><strong>Licencia:</strong> #475849293</p>
-          <p><strong>Teléfono:</strong> +123456789</p>
+          <p><strong>id: </strong>{{ order.driver.id }}</p>
+          <p><strong>Nombre: </strong>{{ order.driver.name }}</p>
+          <p><strong>Teléfono: </strong>{{ order.driver.lastname }}</p>
+          <p><strong>Documento: </strong>{{ order.driver.document }}</p>
         </div>
       </v-col>
 
@@ -181,36 +192,38 @@ exampleFunction();
       <v-col cols="12" md="3" class="pa-2">
         <div class="custom-box border">
           <h3 class="mb-3">Producto</h3>
-          <p><strong>Nombre:</strong> Cemento Portland</p>
-          <p><strong>Cantidad:</strong> 20 toneladas</p>
-          <p><strong>Categoría:</strong> Construcción</p>
+          <p><strong>id: </strong>{{ order.product.id }}</p>
+          <p><strong>Nombre: </strong>{{ order.product.name }}</p>
+          <p><strong>Temperatura máxima: </strong>{{ order.product.limit_temperature }} <span>°C</span></p>
         </div>
       </v-col>
     </v-row>
       </div>
 
       <!-- FECHAS -->
-      <div class="mb-10 border">
-        <h3 class="mb-4">Hitorial de fechas</h3>
-        <v-timeline direction="horizontal">
-          <v-timeline-item v-for="index in timeline">
-            <template v-slot:opposite>
-              <strong>{{ index.label }}</strong>
-            </template>
-            <div>
-              {{ index.date }}
-            </div>
-          </v-timeline-item>
-        </v-timeline>
+      <div v-if="order">
+        <div class="mb-10 border">
+          <h3 class="mb-4">Historial de fechas</h3>
+          <v-timeline direction="horizontal">
+            <v-timeline-item v-for="(item, index) in timeline" :key="index">
+              <template v-slot:opposite>
+                <strong>{{ item.label }}</strong>
+              </template>
+              <div>
+                {{ item.date }}
+              </div>
+            </v-timeline-item>
+          </v-timeline>
+        </div>
       </div>
 
       <!-- Datos de carga -->
         <v-row class="mb-10">
           <v-col class="mr-3 border">
             <h3 class="mb-3">Datos de carga</h3>
-            <p class="mb-3">Fecha de inicio de carga: 2024-11-11 23:31:50</p>
+            <p class="mb-3">Fecha de inicio de carga: {{ formatDate(order.dateInitialCharge.toISOString()) }}</p>
 
-            <v-table>
+            <v-table class="border-table">
               <thead class="header-table">
                 <tr>
                   <th class="text-left"><strong>Parámetro de carga</strong></th>
@@ -224,7 +237,7 @@ exampleFunction();
                 </tr>
                 <tr>
                   <td class="text-right"> <strong>Fecha final de carga:</strong></td>
-                  <td>2024-11-11 23:31:50</td>
+                  <td>{{ formatDate(order.dateFinalCharge.toISOString()) }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -235,12 +248,12 @@ exampleFunction();
             <h3 class="mb-4">Información de último registro</h3>
             
             <div class="custom-box">
-              <p><strong>Peso Final de Carga:</strong> 0.0</p>
-              <p><strong>Última Masa Acumulada:</strong> 15020.9</p>
-              <p><strong>Última Densidad:</strong> 39.5093</p>
-              <p><strong>Última Temperatura:</strong> 0.0</p>
-              <p><strong>Último Caudal:</strong> 7.5696</p>
-              <p><strong>Última Fecha:</strong> 2024-11-11 23:19:02</p>
+              <p><strong>Peso Final de Carga: </strong>{{ order.finalChargeWeight }}</p>
+              <p><strong>Última Masa Acumulada: </strong>{{ order.lastAccumulatedMass }}</p>
+              <p><strong>Última Densidad: </strong>{{ order.lastDensity }}</p>
+              <p><strong>Última Temperatura: </strong>{{ order.lastTemperature }}</p>
+              <p><strong>Último Caudal: </strong>{{ order.lastCaudal }}</p>
+              <p><strong>Última Fecha carga: </strong>{{ formatDate(order.lastTimestamp.toISOString()) }}</p>
             </div>
           </v-col>
         </v-row>
@@ -258,8 +271,22 @@ exampleFunction();
   color: #cecece;
 }
 .border-table{
-  border: 2px solid #1f1f1f;
+  border: 2px solid #e5e7eb;
   border-radius: 20px;
+}
+.border-table th,
+.border-table td {
+  border-right: 1px solid #ddd; /* Línea divisoria */
+}
+
+.border-table th:last-child,
+.border-table td:last-child {
+  border-right: none; /* Quitar el borde de la última columna */
+}
+
+.border-table {
+  border-collapse: collapse; /* Asegurar que las líneas sean consistentes */
+  width: 100%;
 }
 
 .border{

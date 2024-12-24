@@ -5,6 +5,7 @@ import type { Truck } from './truck';
 
 export interface Order {
   id: String;
+  externalId: String;
   password: String;
   preset: Number;
   tare: Number;

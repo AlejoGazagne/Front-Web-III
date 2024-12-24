@@ -1,12 +1,18 @@
 import { defineStore } from 'pinia';
 import type { Order } from '@/types/order';
-import { fetchOrders, fetchOrderById } from '@/services/ordersService';
+import { fetchOrders, fetchOrderById, fetchDetailsOrder, fetchCountOrders } from '@/services/ordersService';
 import { mapOrderFromResponse } from '@/types/mappers/orderMapper';
 
 export const useOrdersStore = defineStore('orders', {
   state: () => ({
     orders: [] as Order[],
-    totalOrders: 0,
+    countOrders: {
+      received: 0,
+      weighed: 0,
+      charged: 0,
+      finished: 0,
+      totalOrders: 0,
+    },
     currentPage: 1,
     pageSize: 10,
     currentFilter: '' as string | null,
@@ -18,9 +24,10 @@ export const useOrdersStore = defineStore('orders', {
 
         this.orders = response.map(mapOrderFromResponse);
 
-        this.totalOrders = response.total;
+        this.countOrders.totalOrders = response.total;
         this.currentPage = page;
         this.currentFilter = filter || null;
+        
       } catch (error) {
         console.error('Error al cargar las ordenes:', error);
         throw error;
@@ -33,13 +40,33 @@ export const useOrdersStore = defineStore('orders', {
 
         const order = mapOrderFromResponse(response);
 
-        // this.orders.push(order);
+        this.orders.push(order);
 
         return order;
       } catch (error) {
-        console.error('Error al cargar la orden:', error);
+        console.error('Error al buscar la orden en el backend:', error);
         throw error;
       }
+    },
+
+    async fetchDetailOrder(orderId: string){
+      const response = await fetchDetailsOrder(orderId);
+      return response;
+    },
+
+    async fetchCountOrders() {
+      const response = await fetchCountOrders();
+      console.log('Total orders:', response);
+
+      this.countOrders = {
+        received: response.received,
+        weighed: response.weighed,
+        charged: response.charged,
+        finished: response.finished,
+        totalOrders: response.total,
+      };
+
+      return response;
     },
 
     async filterByStatus(status: string) {
@@ -65,7 +92,7 @@ export const useOrdersStore = defineStore('orders', {
       }
     
       console.log('Searching for order ID:', orderId);
-      const order = state.orders.find((order) => order.id === orderId);
+      const order = state.orders.find((order) => order.externalId === orderId);
     
       if (!order) {
         console.warn(`Order with ID ${orderId} not found in store.`);
@@ -79,6 +106,6 @@ export const useOrdersStore = defineStore('orders', {
       return state.orders.filter((order) => order.status === status);
     },
 
-    totalPages: (state) => Math.ceil(state.totalOrders / state.pageSize),
+    totalPages: (state) => Math.ceil(state.countOrders.totalOrders / state.pageSize),
   },
 });
