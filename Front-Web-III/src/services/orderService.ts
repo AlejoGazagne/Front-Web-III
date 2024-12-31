@@ -4,11 +4,21 @@ const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable
 
 export const fetchOrders = async (currentPage: number, pageSize: number, currentFilter: string | null) => {
   try {
+    const params: Record<string, string | number> = {
+      page: currentPage,
+      size: pageSize,
+    };
+
+    if (currentFilter) {
+      params.filter = currentFilter;
+    }
+
     const response = await axios.get(`${API_BASE_URL}/sap/orders`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
-      }
+      },
+      params,
     });
 
     return response.data;
@@ -48,7 +58,7 @@ try {
   }
 }
 
-export const fetchCountOrders = async () => {
+export const fetchCountOrders = async () => { // TODO: mejorar nombre de la función
   try {
     const response = await axios.get(`${API_BASE_URL}/sap/orders/count`, {
       headers: {
@@ -56,6 +66,55 @@ export const fetchCountOrders = async () => {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       }
     });
+
+    return response.data;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
+export const fetchAllOrdersCount = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/sap/orders/all-orders-count`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+
+    return response.data;
+  } catch(error) {
+    handleError(error);
+    throw error;
+  }
+}
+
+export const fetchProductsCount = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/sap/orders/products-count`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+
+    return response.data;
+  } catch(error) {
+    handleError(error);
+    throw error;
+  }
+}
+
+export const fetchCountAllClients = async () => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/sap/orders/count-all-clients`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+
     return response.data;
   } catch (error) {
     handleError(error);

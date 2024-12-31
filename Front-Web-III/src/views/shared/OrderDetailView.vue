@@ -32,7 +32,7 @@ const getStatusColor = (status: string) => {
     case 'RECEIVED':
       return 'blue';
     case 'FIRST_WEIGHING':
-      return 'yellow';
+      return 'grey';
     case 'CHARGED':
       return 'orange';
     case 'FINAL_WEIGHING':
@@ -65,11 +65,11 @@ watch(
   (newOrder) => {
     if (newOrder) {
       timeline.value = [
-        { label: 'Recepción', date: formatDate(newOrder.dateReceived.toISOString()) },
-        { label: 'Primer Pesaje', date: formatDate(newOrder.dateFirstWeighing.toISOString()) },
-        { label: 'Carga Inicial', date: formatDate(newOrder.dateInitialCharge.toISOString()) },
-        { label: 'Carga Final', date: formatDate(newOrder.dateFinalCharge.toISOString()) },
-        { label: 'Pesaje Final', date: formatDate(newOrder.dateFinalWeighing.toISOString()) },
+        { label: 'Recepción', date: formatDate(newOrder.dateReceived ? newOrder.dateReceived.toISOString() : null) },
+        { label: 'Primer Pesaje', date: formatDate(newOrder.dateFirstWeighing ? newOrder.dateFirstWeighing.toISOString() : null) },
+        { label: 'Carga Inicial', date: formatDate(newOrder.dateInitialCharge ? newOrder.dateInitialCharge.toISOString() : null) },
+        { label: 'Carga Final', date: formatDate(newOrder.dateFinalCharge ? newOrder.dateFinalCharge.toISOString() : null) },
+        { label: 'Pesaje Final', date: formatDate(newOrder.dateFinalWeighing ? newOrder.dateFinalWeighing.toISOString() : null) },
       ];
     } else {
       timeline.value = [];
@@ -221,7 +221,7 @@ const goHome = () => {
         <v-row class="mb-10">
           <v-col class="mr-3 border">
             <h3 class="mb-3">Datos de carga</h3>
-            <p class="mb-3">Fecha de inicio de carga: {{ formatDate(order.dateInitialCharge.toISOString()) }}</p>
+            <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
 
             <v-table class="border-table">
               <thead class="header-table">
@@ -237,7 +237,7 @@ const goHome = () => {
                 </tr>
                 <tr>
                   <td class="text-right"> <strong>Fecha final de carga:</strong></td>
-                  <td>{{ formatDate(order.dateFinalCharge.toISOString()) }}</td>
+                  <td>{{ order.dateFinalCharge ? formatDate(order.dateFinalCharge.toISOString()) : 'N/A' }}</td>
                 </tr>
               </tbody>
             </v-table>
@@ -253,7 +253,7 @@ const goHome = () => {
               <p><strong>Última Densidad: </strong>{{ order.lastDensity }}</p>
               <p><strong>Última Temperatura: </strong>{{ order.lastTemperature }}</p>
               <p><strong>Último Caudal: </strong>{{ order.lastCaudal }}</p>
-              <p><strong>Última Fecha carga: </strong>{{ formatDate(order.lastTimestamp.toISOString()) }}</p>
+              <p><strong>Última Fecha carga: </strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</p>
             </div>
           </v-col>
         </v-row>

@@ -12,19 +12,19 @@ export interface Order {
   finalWeight: Number;
   status: String;
 
-  dateReceived: Date;
-  dateFirstWeighing: Date;
-  dateInitialCharge: Date;
-  dateFinalCharge: Date;
-  dateFinalWeighing: Date;
-  expectedChargeDate: Date;
+  dateReceived: Date | null;
+  dateFirstWeighing: Date | null;
+  dateInitialCharge: Date | null;
+  dateFinalCharge: Date | null;
+  dateFinalWeighing: Date | null;
+  expectedChargeDate: Date | null;
 
   finalChargeWeight: Number;
   lastAccumulatedMass: Number;
   lastDensity: Number;
   lastTemperature: Number;
   lastCaudal: Number;
-  lastTimestamp: Date;
+  lastTimestamp: Date | null;
 
   driver: Driver;
   client: Client

@@ -1,40 +1,67 @@
 <script setup lang="ts">
-import { shallowRef } from 'vue';
+import { ref, onMounted } from 'vue';
+import { fetchCountClients } from '@/services/clientService';
+import { fetchCountOrders } from '@/services/orderService';
 
-const fivecards = shallowRef([
+const fivecards = ref([
   {
-    name: 'Total Page Views',
-    earn: '4,42,236',
-    percent: '59.3%',
+    name: 'Clientes totales',
+    earn: '0',
     color: 'primary',
-    icon: 'mdi-trending-up',
-    text: '35,000'
+    icon: 'mdi-account-tag-outline',
+    fetchData: fetchCountClients,
+    mapData: (data) => ({ earn: data.totalClients.toString() }),
   },
   {
-    name: 'Total Users',
-    earn: '78,250',
-    percent: '70.5%',
+    name: 'Ordenes terminadas',
+    earn: '0',
+    percent: '',
     color: 'success',
-    icon: 'mdi-account-group',
-    text: '8,900'
+    icon: 'mdi-package-variant-closed-check',
+    fetchData: fetchCountOrders, // No procesamos total ni states aquí
   },
-  {
-    name: 'Total Order',
-    earn: '18,800',
-    percent: '27.4%',
-    color: 'warning',
-    icon: 'mdi-cart-outline',
-    text: '1,943'
-  },
-  {
-    name: 'Total Sales',
-    earn: '$35,078',
-    percent: '27.4%',
-    color: 'error',
-    icon: 'mdi-currency-usd',
-    text: '$20,395'
-  }
+  // {
+  //   name: 'Total Order',
+  //   earn: '18,800',
+  //   percent: '27.4%',
+  //   color: 'warning',
+  //   icon: 'mdi-cart-outline',
+  //   text: '1,943'
+  // },
+  // {
+  //   name: 'Total Sales',
+  //   earn: '$35,078',
+  //   percent: '27.4%',
+  //   color: 'error',
+  //   icon: 'mdi-currency-usd',
+  //   text: '$20,395'
+  // }
 ]);
+
+const updateCards = async () => {
+  for (const card of fivecards.value) {
+    try {
+      const data = await card.fetchData();
+
+      if (card.name === 'Ordenes terminadas') {
+        const total = data.total;
+        const finishedState = data.states.find((state) => state.state === 'finished');
+        const finishedCount = finishedState ? finishedState.count : 0;
+
+        card.earn = finishedCount.toString();
+        card.percent = total > 0 ? ((finishedCount / total) * 100).toFixed(1) + '%' : '0%';
+      } else if (card.name === 'Clientes totales') {
+        card.earn = data.totalClients.toString();
+      }
+    } catch (error) {
+      console.error(`Error al actualizar la tarjeta "${card.name}":`, error);
+    }
+  }
+};
+
+onMounted(() => {
+  updateCards();
+});
 </script>
 
 <template>
@@ -44,9 +71,9 @@ const fivecards = shallowRef([
         <v-card variant="outlined" class="my-card">
           <v-card-text>
             <div class="d-flex align-items-center justify-space-between">
-              <div>
+              <div class="probando">
                 <h6 class="text-h6 text-lightText mb-1">{{ card5.name }}</h6>
-                <h4 class="text-h4 d-flex align-center mb-0">
+                <h4 class="text-h4 d-flex align-center justify-space-between mb-0">
                   {{ card5.earn }}
                   <v-chip :color="card5.color" :border="`${card5.color} solid thin opacity-50`" class="ml-2" size="small" label>
                     <template v-slot:prepend>
@@ -55,9 +82,9 @@ const fivecards = shallowRef([
                     {{ card5.percent }}
                   </v-chip>
                 </h4>
-                <span class="text-lightText text-caption pt-5 d-block">
+                <!-- <span class="text-lightText text-caption pt-5 d-block">
                   You made an extra <span :class="'text-' + card5.color">{{ card5.text }}</span> this year
-                </span>
+                </span> -->
               </div>
             </div>
           </v-card-text>
@@ -69,5 +96,9 @@ const fivecards = shallowRef([
 <style>
 .my-card {
   border-color: #cfcfcf;
+}
+
+.probando{
+  width: 100%;
 }
 </style>
