@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/useAuthStore';
+import { components } from 'vuetify/dist/vuetify-labs.js';
 
 const routes = [
   // Rutas de autenticación
@@ -9,19 +10,19 @@ const routes = [
   },
   // Rutas del administrador
   {
-    path: '/admin',
-    component: () => import('@/views/admin/AddProductView.vue'), // Cambiar por la primer vista del admin
+    path: '/admin/',
+    // component: () => import('../views/admin/AdminView.vue'), // Cambiar por la primer vista del admin
+    meta: { requiresAdmin: true, role: 'ROLE_ADMIN' },
     children: [
       {
-        path: 'dashboard',
-        component: () => import('@/views/admin/AlertsView.vue'),
+        path: 'products',
+        component: () => import('../views/admin/AddProductView.vue'),
       },
       {
-        path: 'manage-users',
-        component: () => import('@/views/admin/ManageUsersView.vue'),
+        path: 'admin-panel',
+        component: () => import('../views/admin/AdminView.vue'),
       },
     ],
-    meta: { requiresAdmin: true, role: 'admin' },
   },
   // Rutas del Operator
 
@@ -45,7 +46,7 @@ const routes = [
     path: '/order/:id',
     name: 'OrderDetail',
     component: () => import('../views/shared/OrderDetailView.vue'),
-  }
+  },
 ];
 
 const router = createRouter({
@@ -56,13 +57,24 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
   const authStore = useAuthStore();
 
+  // Verificar autenticación
   if (to.meta.requiresAuth && !authStore.isAuthenticated) {
-    next('/login');// ver si se puede cambiar y hacer un log automatico asi no pierde las cosas
-  } else if (to.meta.role && to.meta.role !== authStore.userRole) {
-    next('/');
-  } else {
-    next();
+    next('/login'); // Redirigir al login si no está autenticado
+    return;
   }
+
+  // Verificar roles
+  if (to.meta.role) {
+    const userRoles = authStore.userData.roles; // Lista de roles del usuario
+    const requiredRole = to.meta.role as string; // Rol requerido por la ruta
+
+    if (!userRoles.includes(requiredRole)) {
+      next('/'); // Redirigir si el usuario no tiene el rol requerido
+      return;
+    }
+  }
+
+  next(); // Permitir la navegación
 });
 
 export default router;

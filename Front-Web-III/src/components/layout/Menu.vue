@@ -16,8 +16,8 @@ const items = computed(() => {
   if (roles.includes('ROLE_ADMIN')) {
     return [
       ...commonItems,
-      { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin'), },
-      { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/add-product'), },
+      { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin/admin-panel'), },
+      { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/admin/products'), },
     ];
   } else if (roles.includes('Operator')) {
     return [

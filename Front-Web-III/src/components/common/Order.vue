@@ -16,7 +16,7 @@ const getStatusColor = (status: string) => {
     case 'RECEIVED':
       return 'blue';
     case 'FIRST_WEIGHING':
-      return 'yellow';
+      return 'grey';
     case 'CHARGED':
       return 'orange';
     case 'FINAL_WEIGHING':

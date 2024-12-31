@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Order } from '@/types/order';
-import { fetchOrders, fetchOrderById, fetchDetailsOrder, fetchCountOrders } from '@/services/ordersService';
+import { fetchOrders, fetchOrderById, fetchDetailsOrder, fetchCountOrders } from '@/services/orderService';
 import { mapOrderFromResponse } from '@/types/mappers/orderMapper';
 
 export const useOrdersStore = defineStore('orders', {
@@ -14,17 +14,19 @@ export const useOrdersStore = defineStore('orders', {
       totalOrders: 0,
     },
     currentPage: 1,
-    pageSize: 10,
+    pageSize: 7,
     currentFilter: '' as string | null,
   }),
   actions: {
-    async fetchOrders(page: number = 1, filter: string | null) {
+    async fetchOrders(page: number, filter: string | null) {
       try {
-        const response = await fetchOrders(page, this.pageSize, filter);
+        console.log('Filter: ', filter);
+        const response = await fetchOrders(page - 1, this.pageSize, filter);
+        console.log(response)
 
-        this.orders = response.map(mapOrderFromResponse);
+        this.orders = response.content.map(mapOrderFromResponse);
 
-        this.countOrders.totalOrders = response.total;
+        this.countOrders.totalOrders = response.totalElements;
         this.currentPage = page;
         this.currentFilter = filter || null;
         
@@ -56,16 +58,17 @@ export const useOrdersStore = defineStore('orders', {
 
     async fetchCountOrders() {
       const response = await fetchCountOrders();
-      console.log('Total orders:', response);
-
+    
+      const countOrders = {};
+      response.states.forEach((stateObj) => {
+        countOrders[stateObj.state] = stateObj.count;
+      });
+    
       this.countOrders = {
-        received: response.received,
-        weighed: response.weighed,
-        charged: response.charged,
-        finished: response.finished,
+        ...countOrders,
         totalOrders: response.total,
       };
-
+    
       return response;
     },
 

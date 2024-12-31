@@ -1,5 +1,6 @@
 <script lang="ts" setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
+import { fetchCountAllClients } from '@/services/orderService';
 
 // Colores utilizados en el gráfico
 const colors = [
@@ -10,7 +11,7 @@ const colors = [
 // Datos del gráfico
 const series = ref([
   {
-    data: [21, 22, 10, 28, 16, 21, 13, 30],
+    data: [],
   },
 ]);
 
@@ -20,10 +21,10 @@ const chartOptions = ref({
     height: 300,
     type: 'bar',
     toolbar: {
-      show: false, // Esto desactiva el menú contextual
+      show: false,
     },
     zoom: {
-      enabled: false, // Esto desactiva el zoom
+      enabled: false,
     },
   },
   colors: colors,
@@ -41,14 +42,7 @@ const chartOptions = ref({
   },
   xaxis: {
     categories: [
-      ['John', 'Doe'],
-      ['Joe', 'Smith'],
-      ['Jake', 'Williams'],
-      'Amber',
-      ['Peter', 'Brown'],
-      ['Mary', 'Evans'],
-      ['David', 'Wilson'],
-      ['Lily', 'Roberts'],
+      
     ],
     labels: {
       style: {
@@ -58,11 +52,29 @@ const chartOptions = ref({
     },
   },
 });
+
+const updateSeries = async () => {
+  try {
+    const data = await fetchCountAllClients();
+    
+    for (const client of data) {
+      series.value[0].data.push(client.count);
+      chartOptions.value.xaxis.categories.push(client.clientName);
+    }
+
+  } catch (error) {
+    console.error('Error al actualizar el gráfico de columnas:', error);
+  }
+}
+
+onMounted(() =>{
+  updateSeries();
+});
 </script>
 
 <template>
   <div>
-    <h3>Clientes con más ordenes</h3>
+    <h3 class="text-h5">Clientes con más ordenes</h3>
     <apexchart type="bar" height="300" :options="chartOptions" :series="series" class="my-card"></apexchart>
   </div>
 </template>
