@@ -1,10 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, onMounted } from 'vue';
 import { fetchAllOrdersCount } from '@/services/orderService';
-
-const primaryColor = '#4caf50';
-const darkPrimaryColor = '#388e3c';
-const lightBorderColor = '#e0e0e0';
+import { theme } from '@/assets/theme';
 
 const chartOptions = computed(() => ({
   chart: {
@@ -17,7 +14,7 @@ const chartOptions = computed(() => ({
       enabled: false,
     }
   },
-  colors: [primaryColor, darkPrimaryColor],
+  colors: [theme.colors.option1],
   labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
   dataLabels: {
     enabled: false
@@ -36,15 +33,15 @@ const chartOptions = computed(() => ({
     }
   },
   grid: {
-    borderColor: lightBorderColor
+    borderColor: theme.colors.lightBorder
   },
   xaxis: {
     axisBorder: {
       show: true,
-      color: lightBorderColor
+      color: theme.colors.lightBorder
     },
     axisTicks: {
-      color: lightBorderColor
+      color: theme.colors.lightBorder
     }
   },
   legend: {
@@ -65,7 +62,7 @@ const areaChart = ref({
   ]
 });
 
-const getMonthIndex = (monthName) => {
+const getMonthIndex = (monthName: string) => {
   const monthNames = [
     'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo',
     'Junio', 'Julio', 'Agosto', 'Septiembre',
@@ -74,7 +71,7 @@ const getMonthIndex = (monthName) => {
   return monthNames.indexOf(monthName);
 };
 
-const processOrderData = (data) => {
+const processOrderData = (data: any[]) => {
   const monthOrderCounts = Array(12).fill(0);
 
   data.forEach((item) => {
@@ -107,19 +104,19 @@ const tab = ref(1);
 </script>
 
 <template>
-  <v-card class="title-card" variant="text">
+  <v-card class="title-card custom-card" variant="text">
     <v-card-item class="pb-2 px-0 pt-0">
       <div class="d-flex justify-space-between">
         <v-card-title class="text-h5">Ordenes recibidas por mes</v-card-title>
         <div class="d-flex flex-wrap">
-          <v-tabs v-model="tab" color="primary" class="tabBtn" density="compact" hide-slider>
-            <v-tab value="one" class="mr-1" variant="outlined" rounded="md"> Month </v-tab>
-            <!-- <v-tab value="two" variant="outlined" rounded="md"> Week </v-tab> -->
-          </v-tabs>
+          <!-- <v-tabs v-model="tab" color="black" :disabled="true" class="tabBtn" density="compact" hide-slider>
+            <v-tab value="one" class="mr-1" variant="outlined" rounded="md"> Mensualmente </v-tab>
+            <v-tab value="two" variant="outlined" rounded="md"> Week </v-tab>
+          </v-tabs> -->
         </div>
       </div>
     </v-card-item>
-    <v-card-text class="rounded-md overflow-hidden border">
+    <v-card-text class="rounded-md overflow-hidden">
       <v-window v-model="tab">
         <v-window-item value="one">
           <apexchart type="area" height="350" :options="chartOptions" :series="areaChart.series"></apexchart>
@@ -130,8 +127,10 @@ const tab = ref(1);
 </template>
 
 <style scoped>
-.border{
-  border: 1px solid #000000;
-  border-radius: 5px;
+.custom-card{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
+  padding: 1rem;
+  border-radius: 10px;
 }
 </style>

@@ -14,12 +14,23 @@ import * as directives from 'vuetify/directives'
 import { aliases, mdi } from 'vuetify/iconsets/mdi'
 
 import '@mdi/font/css/materialdesignicons.css';
+import { theme } from './assets/theme';
+
+// Iconify
+import { Icon } from '@iconify/vue';
 
 import VueApexCharts from "vue3-apexcharts";
 
 const vuetify = createVuetify({
   components,
   directives,
+  theme: {
+    themes: {
+      light: {
+        colors: theme.colors,
+      },
+    },
+  },
   icons: {
     defaultSet: 'mdi',
     aliases,
@@ -28,9 +39,6 @@ const vuetify = createVuetify({
     },
   },
 })
-
-// Iconify
-import { Icon } from '@iconify/vue';
 
 const app = createApp(App)
 

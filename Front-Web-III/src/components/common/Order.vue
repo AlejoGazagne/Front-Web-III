@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { theme } from '@/assets/theme';
 
 const router = useRouter();
 
@@ -14,13 +14,13 @@ const props = defineProps({
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'RECEIVED':
-      return 'blue';
+      return theme.colors.received;
     case 'FIRST_WEIGHING':
-      return 'grey';
+      return theme.colors.firstWeighing;
     case 'CHARGED':
-      return 'orange';
+      return theme.colors.charged;
     case 'FINAL_WEIGHING':
-      return 'green';
+      return theme.colors.finalWeighing;
     default:
       return 'grey';
   }
@@ -33,7 +33,7 @@ const goToOrderDetail = () => {
 </script>
 
 <template>
-  <div class="d-flex align-center justify-space-between order px-6 object">
+  <div class="object d-flex align-center justify-space-between order px-6">
       <!-- Order ID -->
       <div class="col">
         <p class="item" >Id Order</p>
@@ -92,12 +92,13 @@ const goToOrderDetail = () => {
 }
 .object{
   width: 98%;
+  background-color: var(--v-theme-light-background);
 }
 .order{
   height: 5rem;
   border-radius: 10px;
   margin-bottom: 1.3rem;
-  border: 1px solid #d6d6d6;
-  box-shadow: 0 0 10px #d4d4d4;
+  border: 1px solid var(--v-theme-light-line);
+  box-shadow: 0 0 10px var(--v-theme-light-line);
 }
 </style>

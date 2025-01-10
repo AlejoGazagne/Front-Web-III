@@ -9,15 +9,15 @@ const authStore = useAuthStore();
 const items = computed(() => {
   const roles = authStore.getRoles;
   const commonItems = [
-    { text: 'Orders', icon: 'mdi-truck', action: () => router.push('/'), },
+    { text: 'Ordenes', icon: 'mdi-truck', action: () => router.push('/'), },
     { text: 'Dashboard', icon: 'mdi-chart-box-outline', action: () => router.push('/dashboard'), },
   ];
 
   if (roles.includes('ROLE_ADMIN')) {
     return [
       ...commonItems,
-      { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin/admin-panel'), },
-      { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/admin/products'), },
+      { text: 'Panel de Usuarios', icon: 'mdi-shield-account', action: () => router.push('/admin/admin-panel'), },
+      { text: 'Agregar Producto', icon: 'mdi-plus', action: () => router.push('/admin/products'), },
     ];
   } else if (roles.includes('Operator')) {
     return [

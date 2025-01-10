@@ -8,9 +8,9 @@ import type { Product } from '@/types/product';
 const dialog = ref(false);
 
 const headers = [
-  { title: 'Nombre', value: 'name', align: 'start' },
-  { title: 'Temperatura Máxima', value: 'temperaturaLimite', align: 'end' },
-  { title: 'Cant. Pedidos', value: 'count', align: 'end' },
+  { title: 'Nombre', value: 'name', align: 'start' as 'start' },
+  { title: 'Temperatura Máxima', value: 'temperaturaLimite', align: 'end' as 'end' },
+  { title: 'Cant. Pedidos', value: 'count', align: 'end' as 'end' },
 ];
 
 const products = ref<{ name: string; temperaturaLimite: number; count: number }[]>([]);
@@ -80,9 +80,9 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div class="contenedor">
+  <div class="contenedor custom-card">
     <!-- Encabezado -->
-    <v-row class="d-flex align-center justify-space-between mb-6 mt-3">
+    <v-row class="d-flex align-center justify-space-between mb-6 mt-2 mr-2 ml-2">
       <h2>Lista de Productos</h2>
 
       <div class="d-flex align-center gap-2">
@@ -134,8 +134,8 @@ const handleSave = async () => {
 
             <v-card-actions>
               <v-row justify="end" class="action-buttons mr-5 mb-3">
-                <v-btn @click="handleCancel" variant="outlined">Cancelar</v-btn>
-                <v-btn @click="handleSave" variant="tonal">Guardar</v-btn>
+                <v-btn @click="handleCancel" variant="tonal">Cancelar</v-btn>
+                <v-btn @click="handleSave" variant="outlined">Guardar</v-btn>
               </v-row>
             </v-card-actions>
           </v-card>
@@ -157,6 +157,12 @@ const handleSave = async () => {
 .contenedor {
   margin: 2rem 3rem;
   width: 95%;
+}
+.custom-card{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
+  padding: 1rem;
+  border-radius: 10px;
 }
 .tabla {
   border: 1px solid #bebebe;

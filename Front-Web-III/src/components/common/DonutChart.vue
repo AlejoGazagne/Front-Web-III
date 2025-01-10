@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted, ref, computed } from 'vue';
 import { useOrdersStore } from '@/stores/useOrdersStore';
+import { theme } from '@/assets/theme';
 
 const ordersStore = useOrdersStore();
 
@@ -31,7 +32,7 @@ const chartOptions = ref({
       },
     },
   ],
-  colors: ['#b62100', '#078f02', '#00177e'],
+  colors: [theme.colors.received, theme.colors.firstWeighing, theme.colors.charged],
   legend: {
     position: 'bottom',
   },
@@ -61,9 +62,9 @@ onMounted(() => {
 </script>
   
 <template>
-  <div>
+  <div class="custom-card">
     <h2 class="mb-2 text-h5">Ordenes en curso</h2>
-    <div class="border">
+    <div>
       <apexchart
         type="donut"
         height="380"
@@ -75,9 +76,11 @@ onMounted(() => {
 </template>
   
 <style scoped>
-.border{
-  border: 1px solid #000000;
-  border-radius: 5px;
+.custom-card{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
+  padding: 1rem;
+  border-radius: 10px;
 }
 .probando{
   background-color: #b62100;

@@ -18,6 +18,8 @@ export const useAuthStore = defineStore('auth', {
           id: response.id,
           name: response.username,
           roles: response.roles,
+          mail: '',
+          enabled: true
         };
 
         this.setUserData(userData);

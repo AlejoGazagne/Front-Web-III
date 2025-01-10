@@ -2,6 +2,7 @@
 import Header from '@/components/layout/Header.vue';
 import Menu from '@/components/layout/Menu.vue';
 import LoadingTruck from '@/components/common/LoadingTruck.vue';
+import { theme } from '@/assets/theme';
 
 import { computed, ref, onMounted, watch } from 'vue';
 import { useOrdersStore } from '@/stores/useOrdersStore';
@@ -30,13 +31,13 @@ onMounted(async () => {
 const getStatusColor = (status: string) => {
   switch (status) {
     case 'RECEIVED':
-      return 'blue';
+      return theme.colors.received;
     case 'FIRST_WEIGHING':
-      return 'grey';
+      return theme.colors.firstWeighing;
     case 'CHARGED':
-      return 'orange';
+      return theme.colors.charged;
     case 'FINAL_WEIGHING':
-      return 'green';
+      return theme.colors.finalWeighing;
     default:
       return 'grey';
   }
@@ -71,6 +72,7 @@ watch(
         { label: 'Carga Final', date: formatDate(newOrder.dateFinalCharge ? newOrder.dateFinalCharge.toISOString() : null) },
         { label: 'Pesaje Final', date: formatDate(newOrder.dateFinalWeighing ? newOrder.dateFinalWeighing.toISOString() : null) },
       ];
+      console.log('timeline', timeline.value);
     } else {
       timeline.value = [];
     }
@@ -117,17 +119,17 @@ const goHome = () => {
       </v-row>
 
       <div v-if="order">
-        <div class="border">
+        <div class="borde">
         <v-row class="align-center justify-space-between mb-3">
           <v-col cols="12" md="6" lg="8">
-            <h3 class="mb-1">Order# {{ order.id }}</h3>
-            <v-chip :color="getStatusColor(order.status)" text-color="white" tile>
+            <h3 class="mb-1">Order #{{ order.id }}</h3>
+            <v-chip :color="getStatusColor(order.status as string)" text-color="white" tile>
               {{ order.status }}
             </v-chip>
           </v-col>
 
           <v-col cols="12" md="6" lg="4" class="text-right">
-            <v-btn color="green" dark>
+            <v-btn :disabled="order.status !== 'FINAL_WEIGHING'" color="green" dark>
               <Icon icon="mdi:file-download-outline" class="mr-2" height="20px" />
               Descargar conciliación
             </v-btn>
@@ -135,18 +137,18 @@ const goHome = () => {
         </v-row>
 
         <div>
-          <p><strong>Contraseña:</strong> {{ order.password }}</p>
-          <p><strong>Preset:</strong> {{ order.preset }}</p>
+          <span class="text-subtitle-2">Contraseña: </span><strong>{{ order.password }}</strong><br>
+          <span class="text-subtitle-2">Preset: </span><strong>{{ order.preset }}</strong>
         </div>
 
         <v-row class="mt-4">
           <v-col cols="12" md="3">
             <p class="text-subtitle-2">Fecha Entrada: </p>
-            <p class="text-body-1">{{ formatDate(order.dateReceived?.toISOString()) }}</p>
+            <p class="text-body-2"> <strong>{{ formatDate(order.dateReceived?.toISOString()) }}</strong></p>
           </v-col>
           <v-col cols="12" md="3">
             <p class="text-subtitle-2">Fecha Fin:</p>
-            <p class="text-body-1"> {{ formatDate(order.dateFinalWeighing?.toISOString()) }}</p>
+            <p class="text-body-2"> <strong>{{ formatDate(order.dateFinalWeighing?.toISOString()) }}</strong></p>
           </v-col>
           <!-- <v-col cols="12" md="3">
             <p class="text-subtitle-2">Updated:</p>
@@ -157,52 +159,64 @@ const goHome = () => {
 
       <div class="mb-4">
         <v-row class="mt-4" dense>
-      <!-- Cliente -->
-      <v-col cols="12" md="3" class="pa-2">
-        <div class="custom-box border">
-          <h3 class="mb-3">Cliente</h3>
-          <p><strong>id: </strong>{{ order.client.id }}</p>
-          <p><strong>Nombre: </strong>{{ order.client.companyName }}</p>
-        </div>
-      </v-col>
+          <!-- Cliente -->
+          <v-col cols="12" md="3" class="pa-2">
+            <div class="custom-box borde">
+              <div class="d-flex align-center mb-3">
+                <Icon icon="mdi-account" class="mr-2" height="20px"/>
+                <h3>Cliente</h3>
+              </div>
+              <span>id: <strong>{{ order.client.id }}</strong></span>
+              <span>Nombre: <strong>{{ order.client.companyName }}</strong></span>
+            </div>
+          </v-col>
 
-      <!-- Camión -->
-      <v-col cols="12" md="3" class="pa-2">
-        <div class="custom-box border">
-          <h3 class="mb-3">Camión</h3>
-          <p><strong>id: </strong>{{ order.truck.id }}</p>
-          <p><strong>Placa: </strong>{{ order.truck.plate }}</p>
-          <p><strong>Tara: </strong>{{ order.tare }} <span>kg</span></p>
-          <p><strong>Peso final: </strong>{{ order.finalWeight }} <span>kg</span></p>
-        </div>
-      </v-col>
+          <!-- Camión -->
+          <v-col cols="12" md="3" class="pa-2">
+            <div class="custom-box borde">
+              <div class="d-flex align-center mb-3">
+                <Icon icon="mdi:tanker-truck" class="mr-2" height="20px"/>
+                <h3>Camión</h3>
+              </div>
+              <span>id: <strong>{{ order.truck.id }}</strong></span>
+              <span>Placa: <strong>{{ order.truck.plate }}</strong></span>
+              <span>Tara: <strong>{{ order.tare }} kg</strong></span>
+              <span>Peso final: <strong>{{ order.finalWeight }} kg</strong></span>
+            </div>
+          </v-col>
 
-      <!-- Chofer -->
-      <v-col cols="12" md="3" class="pa-2">
-        <div class="custom-box border">
-          <h3 class="mb-3">Chofer</h3>
-          <p><strong>id: </strong>{{ order.driver.id }}</p>
-          <p><strong>Nombre: </strong>{{ order.driver.name }}</p>
-          <p><strong>Teléfono: </strong>{{ order.driver.lastname }}</p>
-          <p><strong>Documento: </strong>{{ order.driver.document }}</p>
-        </div>
-      </v-col>
+          <!-- Chofer -->
+          <v-col cols="12" md="3" class="pa-2">
+            <div class="custom-box borde">
+              <div class="d-flex align-center mb-3">
+                <Icon icon="mdi:steering" class="mr-2" height="20px"/>
+                <h3>Chofer</h3>
+              </div>
+              <span>id: <strong>{{ order.driver.id }}</strong></span>
+              <span>Nombre: <strong>{{ order.driver.name }}</strong></span>
+              <span>Teléfono: <strong>{{ order.driver.lastname }}</strong></span>
+              <span>Documento: <strong>{{ order.driver.document }}</strong></span>
+            </div>
+          </v-col>
 
-      <!-- Producto -->
-      <v-col cols="12" md="3" class="pa-2">
-        <div class="custom-box border">
-          <h3 class="mb-3">Producto</h3>
-          <p><strong>id: </strong>{{ order.product.id }}</p>
-          <p><strong>Nombre: </strong>{{ order.product.name }}</p>
-          <p><strong>Temperatura máxima: </strong>{{ order.product.limit_temperature }} <span>°C</span></p>
-        </div>
-      </v-col>
-    </v-row>
+          <!-- Producto -->
+          <v-col cols="12" md="3" class="pa-2">
+            <div class="custom-box borde">
+              <div class="d-flex align-center mb-3">
+                <Icon icon="mdi:package-variant-closed" class="mr-2" height="20px"/>
+                <h3>Producto</h3>
+              </div>
+              <span>id: <strong>{{ order.product.id }}</strong></span>
+              <span>Nombre: <strong>{{ order.product.name }}</strong></span>
+              <span>Temperatura máxima: <strong>{{ order.product.limit_temperature }} °C</strong></span>
+            </div>
+          </v-col>
+        </v-row>
       </div>
 
       <!-- FECHAS -->
-      <div v-if="order">
-        <div class="mb-10 border">
+      <!-- <div v-if="order">
+        <div class="mb-5 borde">
           <h3 class="mb-4">Historial de fechas</h3>
           <v-timeline direction="horizontal">
             <v-timeline-item v-for="(item, index) in timeline" :key="index">
@@ -215,11 +229,34 @@ const goHome = () => {
             </v-timeline-item>
           </v-timeline>
         </div>
+      </div> -->
+
+      <!-- Probando -->
+      <div v-if="order" class="borde mb-8">
+        <h3 class="mb-3">Historial de fechas</h3>
+        <div class="progress-bar">
+          <div
+            v-for="(item, index) in timeline"
+            :key="index"
+            class="progress-step mr-3"
+            :class="{ active: item.date && item.date !== 'N/A' }">
+            <!-- Etiqueta del paso -->
+            <span class="step-label mb-5">{{ item.label }}</span>
+
+            <!-- Línea de progreso -->
+            <div class="step-line mt-2"></div>
+
+            <!-- Fecha del paso -->
+            <span class="step-date">
+              {{ item.date && item.date !== '' ? item.date : 'N/A' }}
+            </span>
+          </div>
+        </div>
       </div>
 
       <!-- Datos de carga -->
         <v-row class="mb-10">
-          <v-col class="mr-3 border">
+          <v-col class="mr-3 borde">
             <h3 class="mb-3">Datos de carga</h3>
             <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
 
@@ -243,22 +280,24 @@ const goHome = () => {
             </v-table>
           </v-col>
 
-          <v-col class="border" cols="4">
-            
-            <h3 class="mb-4">Información de último registro</h3>
+          <v-col class="borde" cols="4">
+            <div class="d-flex align-center mb-3">
+              <Icon icon="mdi:clipboard-text-multiple-outline" class="mr-2" height="20px"/>
+              <h3>Información de último registro</h3>
+            </div>
             
             <div class="custom-box">
-              <p><strong>Peso Final de Carga: </strong>{{ order.finalChargeWeight }}</p>
-              <p><strong>Última Masa Acumulada: </strong>{{ order.lastAccumulatedMass }}</p>
-              <p><strong>Última Densidad: </strong>{{ order.lastDensity }}</p>
-              <p><strong>Última Temperatura: </strong>{{ order.lastTemperature }}</p>
-              <p><strong>Último Caudal: </strong>{{ order.lastCaudal }}</p>
-              <p><strong>Última Fecha carga: </strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</p>
+              <p>Peso Final de Carga: <strong>{{ order.finalChargeWeight }}</strong></p>
+              <p>Última Masa Acumulada: <strong>{{ order.lastAccumulatedMass }}</strong></p>
+              <p>Última Densidad: <strong>{{ order.lastDensity }}</strong></p>
+              <p>Última Temperatura: <strong>{{ order.lastTemperature }}</strong></p>
+              <p>Último Caudal: <strong>{{ order.lastCaudal }}</strong></p>
+              <p>Última Fecha carga: <strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</strong></p>
             </div>
           </v-col>
         </v-row>
 
-        <LoadingTruck class="border load" v-bind:preset=5000 />
+        <LoadingTruck class="borde load" v-bind:preset=5000 />
       </div>
       
     </v-main>
@@ -289,8 +328,9 @@ const goHome = () => {
   width: 100%;
 }
 
-.border{
-  border: 2px solid #e5e7eb;
+.borde{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
   padding: 1rem;
   border-radius: 10px;
 }
@@ -316,14 +356,52 @@ h3 {
   text-align: right;
 }
 
-.text-subtitle-2 {
+/* .text-subtitle-2 {
   font-size: 0.875rem;
   color: #6b7280;
   margin-bottom: 0.2rem;
-}
+} */
 
-.text-body-1 {
+/* .text-body-1 {
   font-size: 1rem;
   font-weight: bold;
+} */
+
+/* probando */
+.progress-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  position: relative;
+}
+
+.step-label {
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+.step-line {
+  height: 5px;
+  width: 100%;
+  background-color: #e0e0e0;
+  position: absolute;
+  top: 18px;
+  z-index: 1;
+}
+
+.progress-step.active .step-line {
+  background-color: var(--v-theme-light-blue);
+}
+
+.progress-step.active .step-label {
+  color: var(--v-theme-light-blue);
 }
 </style>
