@@ -1,14 +1,6 @@
 <script setup lang="ts">
 import { computed, ref } from 'vue';
-import { useTheme } from 'vuetify';
-
-const theme = useTheme();
-const WarningColor = theme.current.value.colors.warning;
-
-// Definir funciones para obtener los colores
-const getPrimary = computed(() => theme.current.value.colors.primary);
-const getLightBorder = computed(() => theme.current.value.colors.lightBorder);
-const getSecondary = computed(() => theme.current.value.colors.secondary);
+import { theme } from '@/assets/theme';
 
 const chartOptions1 = computed(() => {
   return {
@@ -16,7 +8,7 @@ const chartOptions1 = computed(() => {
       type: 'bar',
       height: 360,
       fontFamily: `inherit`,
-      foreColor: theme.current.value.colors.secondary,
+      foreColor: theme.colors.secondary,
       offsetY: 20,
       toolbar: {
         show: false
@@ -32,7 +24,9 @@ const chartOptions1 = computed(() => {
       }
     },
     labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'],
-    colors: [WarningColor, getPrimary.value],
+    colors: [theme.colors.warning, theme.colors.primary, theme.colors.secondary, theme.colors.option3, theme.colors.option5,
+      theme.colors.option6, theme.colors.option8, theme.colors.option9, theme.colors.option10
+    ],
     stroke: {
       curve: 'smooth',
       width: 6,
@@ -50,7 +44,7 @@ const chartOptions1 = computed(() => {
       }
     },
     grid: {
-      borderColor: getLightBorder.value
+      borderColor: theme.colors.lightBorder
     },
     tooltip: {
       fixed: {

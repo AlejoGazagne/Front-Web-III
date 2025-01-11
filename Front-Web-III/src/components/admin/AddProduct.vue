@@ -3,6 +3,7 @@ import { onMounted, ref } from 'vue';
 import { fetchProducts } from '@/services/productService';
 import { fetchProductsCount } from '@/services/orderService';
 import { fetchProduct } from '@/services/productService';
+import { theme } from '@/assets/theme';
 import type { Product } from '@/types/product';
 
 const dialog = ref(false);
@@ -89,9 +90,9 @@ const handleSave = async () => {
         <!-- Botón Agregar Producto -->
         <v-dialog v-model="dialog" max-width="500" persistent>
           <template v-slot:activator="{ props: activatorProps }">
-            <v-btn v-bind="activatorProps">
-              <Icon icon="mdi-plus" height="24px" />
-              Agregar Producto
+            <v-btn v-bind="activatorProps" :color="theme.colors.secondary">
+              <Icon icon="mdi:package-variant-closed-plus" height="24px" class="mr-2" />
+              <span>Agregar Producto</span>
             </v-btn>
           </template>
 

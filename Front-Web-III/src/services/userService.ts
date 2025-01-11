@@ -1,4 +1,5 @@
 import axios from 'axios';
+import type { UserData } from '../types/user';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable de entorno
 
@@ -35,15 +36,31 @@ export const fetchUsers = async () => {
   }
 }
 
-export const editUser = async (data: any) => {
+export const editUser = async (user: any) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/sap/user`, data, {
+    const response = await axios.put(`${API_BASE_URL}/sap/user`, user, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       }
     });
 
+    return response.status;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
+export const addUser = async (user: any) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/sap/user`, user, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+  
     return response.status;
   } catch (error) {
     handleError(error);

@@ -1,5 +1,5 @@
 <script setup>
-import AddProduct from "@/components/common/AddProduct.vue";
+import AddProduct from "@/components/admin/AddProduct.vue";
 import Header from "@/components/layout/Header.vue";
 import Menu from "@/components/layout/Menu.vue";
 

@@ -12,13 +12,15 @@ export const useAuthStore = defineStore('auth', {
       try{
         const response = await login(username, password);
 
+        console.log('Respuesta del login:', response);
+
         this.setToken(response.token);
         
         const userData: UserData = {
           id: response.id,
           name: response.username,
           roles: response.roles,
-          mail: '',
+          mail: response.email,
           enabled: true
         };
 

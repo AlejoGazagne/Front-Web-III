@@ -214,23 +214,6 @@ const goHome = () => {
         </v-row>
       </div>
 
-      <!-- FECHAS -->
-      <!-- <div v-if="order">
-        <div class="mb-5 borde">
-          <h3 class="mb-4">Historial de fechas</h3>
-          <v-timeline direction="horizontal">
-            <v-timeline-item v-for="(item, index) in timeline" :key="index">
-              <template v-slot:opposite>
-                <strong>{{ item.label }}</strong>
-              </template>
-              <div>
-                {{ item.date }}
-              </div>
-            </v-timeline-item>
-          </v-timeline>
-        </div>
-      </div> -->
-
       <!-- Probando -->
       <div v-if="order" class="borde mb-8">
         <h3 class="mb-3">Historial de fechas</h3>
@@ -255,7 +238,7 @@ const goHome = () => {
       </div>
 
       <!-- Datos de carga -->
-        <v-row class="mb-10">
+        <v-row class="mb-5 mr-1 ml-1">
           <v-col class="mr-3 borde">
             <h3 class="mb-3">Datos de carga</h3>
             <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
@@ -355,17 +338,6 @@ h3 {
 .text-right {
   text-align: right;
 }
-
-/* .text-subtitle-2 {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin-bottom: 0.2rem;
-} */
-
-/* .text-body-1 {
-  font-size: 1rem;
-  font-weight: bold;
-} */
 
 /* probando */
 .progress-bar {

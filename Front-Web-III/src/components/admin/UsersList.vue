@@ -2,9 +2,10 @@
 import { onMounted, ref } from 'vue';
 import { theme } from '@/assets/theme';
 import type { UserData } from '@/types/user';
-import { editUser, fetchUsers } from '@/services/userService';
+import { editUser, fetchUsers, addUser } from '@/services/userService';
 
 const dialog = ref(false);
+const dialogAddUser = ref(false);
 
 // Datos del formulario
 const userEdit = ref<UserData>({
@@ -12,8 +13,10 @@ const userEdit = ref<UserData>({
   name: '',
   mail: '',
   roles: [],
-  enabled: true,
+  enabled: false,
 });
+
+const pass = ref<String>()
 
 // Opciones del selector múltiple
 const options = ref(["ROLE_ADMIN", "ROLE_OPERATOR"]);
@@ -29,7 +32,12 @@ const headers = ref([
 const usuarios = ref<UserData[]>([]);
 
 const handleCancel = () => {
-  // console.log(editUser.value)
+  userEdit.value.id = '';
+  userEdit.value.name = '';
+  userEdit.value.mail = '';
+  userEdit.value.roles = [];
+  userEdit.value.enabled = false;
+
   dialog.value = false;
 };
 
@@ -91,7 +99,7 @@ const formatRoles = (roles: string[]): string => {
   };
 
   return roles
-    .map(role => roleMapping[role] || role) // Usa el mapeo; si no coincide, muestra el valor original.
+    .map(role => roleMapping[role] || role)
     .join(', ');
 };
 
@@ -99,11 +107,145 @@ const formatEnabled = (enabled: boolean): string => {
   return enabled ? 'Habilitado' : 'Deshabilitado';
 };
 
+const handleSaveAddUser = async () => {
+  if (userEdit.value.name === '' || userEdit.value.mail === '' || userEdit.value.roles.length === 0 || pass.value === '') {
+    alert('Por favor, completa todos los campos correctamente.');
+    return;
+  }
+
+  try {
+    const newUser = {
+      id: userEdit.value.id,
+      username: userEdit.value.name,
+      email: userEdit.value.mail,
+      password: pass.value,
+      roles: userEdit.value.roles,
+      enabled: userEdit.value.enabled,
+    };
+
+    const response = await addUser(newUser);
+
+    if (response === 201) {
+      // Actualizar la lista de usuarios
+      const users = await fetchUsers();
+      usuarios.value = users.map((user: any) => ({
+        ...user,
+      }));
+    }
+
+    userEdit.value.id = '';
+    userEdit.value.name = '';
+    userEdit.value.mail = '';
+    userEdit.value.roles = [];
+    userEdit.value.enabled = false;
+    pass.value = '';
+
+    dialogAddUser.value = false;
+  } catch (error) {
+    
+  }
+}
+
 </script>
 
 <template>
-  <div>
-    <h2 class="text-h5 ml-6 mt-3 mb-2">Usuarios de la empresa</h2>
+  <div class="w-100 pr-8">
+    <div class="d-flex align-center justify-space-between">
+      <h2 class="text-h5 ml-6 mt-3 mb-2">Usuarios de la empresa</h2>
+      <!-- Botón Agregar Producto -->
+      <v-dialog v-model="dialogAddUser" max-width="500" persistent>
+        <template v-slot:activator="{ props: activatorProps }">
+          <v-btn v-bind="activatorProps" :color="theme.colors.primary" class="btn" >
+            <Icon icon="mdi:account-plus-outline" height="24px" class="mr-2" />
+            <p>Agregar Usuario</p>
+          </v-btn>
+        </template>
+
+        <v-card class="dialog-card">
+          <v-card-title>Agregar Usuario</v-card-title>
+          <v-card-text>
+            <v-row class="d-flex justify-center">
+              <div class="custom-input">
+                <v-text-field
+                  v-model="userEdit.name"
+                  label="Nombre"
+                  placeholder="Ingrese nombre de usuario"
+                  outlined
+                  dense
+                  required
+                  append-inner-icon="mdi-account"
+                ></v-text-field>
+              </div>
+
+              <!-- Campo para Correo Electrónico -->
+              <div class="custom-input">
+                <v-text-field
+                  v-model="userEdit.mail"
+                  label="Correo Electrónico"
+                  placeholder="ejemplo@correo.com"
+                  outlined
+                  dense
+                  required
+                  append-inner-icon="mdi-email"
+                  type="email"
+                  :rules="[value => !!value || 'El correo es obligatorio', value => /.+@.+\..+/.test(value) || 'Formato inválido']"
+                ></v-text-field>
+              </div>
+
+              <!-- Campo para Contraseña -->
+              <div class="custom-input">
+                <v-text-field
+                  v-model="pass"
+                  label="Contraseña"
+                  placeholder="******"
+                  outlined
+                  dense
+                  required
+                  type="password"
+                  append-inner-icon="mdi-lock"
+                  :rules="[
+                    value => !!value || 'La contraseña es obligatoria',
+                    value => value.length >= 6 || 'La contraseña debe tener al menos 6 caracteres'
+                    ]"
+                ></v-text-field>
+              </div>
+
+              <!-- Select para seleccionar múltiples opciones -->
+              <div class="custom-input">
+                <v-select
+                  label="Seleccionar opciones"
+                  placeholder="Elija una o varias opciones"
+                  outlined
+                  dense
+                  multiple
+                  required
+                  :items="options"
+                  v-model="userEdit.roles"
+                  append-inner-icon="mdi-checkbox-multiple-marked-outline"
+                ></v-select>
+              </div>
+
+              <!-- Switch para Habilitar/Deshabilitar la cuenta -->
+              <div class="custom-input">
+                <v-switch
+                  v-model="userEdit.enabled"
+                  :label="userEdit.enabled ? 'Deshabilitar' : 'Habilitar'"
+                  class="custom-switch"
+                  :color="theme.colors.primary"
+                ></v-switch>
+              </div>
+            </v-row>
+          </v-card-text>
+
+          <v-card-actions>
+            <v-row justify="end" class="action-buttons mr-5 mb-3">
+              <v-btn @click="handleCancel" variant="tonal">Cancelar</v-btn>
+              <v-btn @click="handleSaveAddUser" variant="outlined">Guardar</v-btn>
+            </v-row>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+    </div>
     <!-- TODO: agregar para agregar usuario -->
     <v-row class="mb-2">
       <v-col cols="3" class=" ml-6 mt-3">
@@ -212,9 +354,10 @@ const formatEnabled = (enabled: boolean): string => {
 </template>
 
 <style scoped>
-.probando {
-  background-color: antiquewhite;
+.w-100 {
+  width: 100%;
 }
+
 .custom-input {
   width: 90%;
 }
