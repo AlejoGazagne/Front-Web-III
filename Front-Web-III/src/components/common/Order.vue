@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { theme } from '@/assets/theme';
+import { getStatusColor } from '@/utils/formatState';
+import { getStatusLabel } from '@/utils/formatState';
 
 const router = useRouter();
 
@@ -10,21 +11,6 @@ const props = defineProps({
     required: true,
   },
 });
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'RECEIVED':
-      return theme.colors.received;
-    case 'FIRST_WEIGHING':
-      return theme.colors.firstWeighing;
-    case 'CHARGED':
-      return theme.colors.charged;
-    case 'FINAL_WEIGHING':
-      return theme.colors.finalWeighing;
-    default:
-      return 'grey';
-  }
-};
 
 const goToOrderDetail = () => {
   router.push({ name: 'OrderDetail', params: { id: props.order.id } });
@@ -68,7 +54,7 @@ const goToOrderDetail = () => {
       <div class="d-flex flex-column align-center col">
         <p class="item">Estado</p>
         <v-chip :color="getStatusColor(props.order.status)" text-color="white">
-          {{ props.order.status }}
+          {{ getStatusLabel(props.order.status) }}
         </v-chip>
       </div>
 

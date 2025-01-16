@@ -1,6 +1,4 @@
 <script lang="ts" setup>
-import Header from '@/components/layout/Header.vue';
-import Menu from '@/components/layout/Menu.vue';
 import UniqueVisitor from '@/components/common/UniqueVisitor.vue';
 import WidgetFive from '@/components/common/WidgetFive.vue';
 import DonutChart from '@/components/common/DonutChart.vue';
@@ -12,16 +10,8 @@ import AlarmsReport from '@/components/admin/AlarmsReport.vue';
 </script>
 
 <template>
-  <v-app>
-    <v-app-bar app clipped >
-      <Header />
-    </v-app-bar>
-    
-    <Menu />
-
-    <!-- Contenido principal -->
-    <v-main class="mt-10 ml-15 mr-15">
-      <v-row>
+  <div>
+    <v-row>
         <WidgetFive />
       </v-row>
       <v-row>
@@ -49,8 +39,7 @@ import AlarmsReport from '@/components/admin/AlarmsReport.vue';
           <AlarmsReport />
         </v-col>
       </v-row>
-    </v-main>
-  </v-app>
+  </div>
 </template>
 
 <style scoped>

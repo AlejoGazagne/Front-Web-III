@@ -146,6 +146,16 @@ const handleSaveAddUser = async () => {
   }
 }
 
+const handleCancelAddUser = async () => {
+  userEdit.value.id = '';
+  userEdit.value.name = '';
+  userEdit.value.mail = '';
+  userEdit.value.roles = [];
+  userEdit.value.enabled = false;
+
+  dialogAddUser.value = false;
+}
+
 </script>
 
 <template>
@@ -239,7 +249,7 @@ const handleSaveAddUser = async () => {
 
           <v-card-actions>
             <v-row justify="end" class="action-buttons mr-5 mb-3">
-              <v-btn @click="handleCancel" variant="tonal">Cancelar</v-btn>
+              <v-btn @click="handleCancelAddUser" variant="tonal">Cancelar</v-btn>
               <v-btn @click="handleSaveAddUser" variant="outlined">Guardar</v-btn>
             </v-row>
           </v-card-actions>

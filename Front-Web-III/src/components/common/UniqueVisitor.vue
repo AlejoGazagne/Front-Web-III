@@ -110,7 +110,7 @@ const tab = ref(1);
         <v-card-title class="text-h5">Ordenes recibidas por mes</v-card-title>
         <div class="d-flex flex-wrap">
           <!-- <v-tabs v-model="tab" color="black" :disabled="true" class="tabBtn" density="compact" hide-slider>
-            <v-tab value="one" class="mr-1" variant="outlined" rounded="md"> Mensualmente </v-tab>
+            <span class="mr-1">Anual</span>
             <v-tab value="two" variant="outlined" rounded="md"> Week </v-tab>
           </v-tabs> -->
         </div>

@@ -68,6 +68,22 @@ export const addUser = async (user: any) => {
   }
 }
 
+export const editarUsuario = async (user: any) => {
+  try {
+    const response = await axios.post(`${API_BASE_URL}/sap/profile/user`, user, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+
+    return response;
+  } catch (error) {
+    handleError(error);
+    return error;
+  }
+}
+
 const handleError = (error: any) => {
   if (axios.isAxiosError(error)) {
     console.error('API Error:', error.response?.data || error.message);

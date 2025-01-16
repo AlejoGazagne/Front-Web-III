@@ -2,47 +2,62 @@
 import { ref, computed } from 'vue';
 import { useAuthStore } from '../../stores/useAuthStore';
 import type { UserData } from '@/types/user';
+import { editarUsuario } from '@/services/userService';
+import { formatRoles } from '@/utils/formatRoles';
 
 // Obtener datos del store
 const userAuthStore = useAuthStore();
 const userData: UserData = userAuthStore.getUserData;
 
 // Estado para mostrar/ocultar contraseña
-const showPassword = ref(false);
+const showChangePassword = ref(false);
+
+const showSnackbar = ref(false); // Estado para mostrar u ocultar el snackbar
+const snackbarMessage = ref(''); // Mensaje a mostrar
+const snackbarColor = ref('success'); // Color dinámico del snackbar
 
 // Copia de los datos del usuario para edición
 const user = ref({
+  id: userData.id,
   name: userData.name,
   mail: userData.mail,
-  password: ''
+  currentPassword: '',
+  newPassword: ''
 });
 
 // Computed para verificar si hubo cambios
 const hasChanges = computed(() => {
   return (
-    user.value.name !== userData.name ||
-    user.value.mail !== userData.mail ||
-    user.value.password !== ''
+    userData.name !== user.value.name ||
+    userData.mail !== user.value.mail ||
+    user.value.newPassword !== ''
   );
 });
 
-// Formateo de roles
-const formatRoles = (roles: string[]): string => {
-  const roleMapping: Record<string, string> = {
-    ROLE_ADMIN: 'Administrador',
-    ROLE_OPERATOR: 'Operario',
-  };
-
-  return roles
-    .map(role => roleMapping[role] || role)
-    .join(', ');
-};
-
+// Función para guardar cambios
 const handleSaveChanges = async () => {
-  // Lógica para guardar cambios
-  console.log('Guardando cambios...');
-};
+  if (user.value.name === '' || user.value.mail === '' ) {
+    alert('Por favor, completa todos los campos correctamente.');
+    return;
+  }
 
+  const response = await editarUsuario(user.value) as { status: number, data: UserData };
+
+  if (response.status === 200) {
+    userAuthStore.setUserData(response.data);
+    showChangePassword.value = false;
+    
+    snackbarMessage.value = '¡Perfil actualizado con éxito!';
+    snackbarColor.value = 'success';
+    showSnackbar.value = true;
+    
+  } else {
+    snackbarMessage.value = 'Hubo un error al actualizar el perfil. Por favor, intenta nuevamente.';
+    snackbarColor.value = 'error';
+    showSnackbar.value = true;
+  }
+  
+};
 </script>
 
 <template>
@@ -53,7 +68,7 @@ const handleSaveChanges = async () => {
     </v-row>
 
     <!-- Datos del usuario -->
-    <v-row class="borde align-center border mr-1 ml-1">
+    <v-row class="borde align-center border mr-1 ml-1 pl-7">
       <Icon icon="mdi:account-circle-outline" height="4rem" class="mr-10"/>
       <div>
         <h3 class="text-h5"><strong>{{ userData.name }}</strong></h3>
@@ -70,7 +85,7 @@ const handleSaveChanges = async () => {
       
       <div>
         <!-- Inputs Minimalistas -->
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3">
           <v-text-field
             v-model="user.name"
             label="Nombre"
@@ -79,7 +94,7 @@ const handleSaveChanges = async () => {
             variant="underlined"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="4">
+        <v-col cols="12" md="3">
           <v-text-field
             v-model="user.mail"
             label="Correo Electrónico"
@@ -88,19 +103,38 @@ const handleSaveChanges = async () => {
             variant="underlined"
           ></v-text-field>
         </v-col>
-        <v-col cols="12" md="4">
+        
+        <!-- Texto para cambiar contraseña -->
+        <v-col cols="12" md="12">
+          <p
+            class="text-body-2 cursor-pointer"
+            @click="showChangePassword = !showChangePassword"
+          >
+            ¿Queres cambiar tu contraseña?
+          </p>
+        </v-col>
+
+        <!-- Inputs de cambio de contraseña -->
+        <v-col v-if="showChangePassword" cols="12" md="3">
           <v-text-field
-            v-model="user.password"
-            :type="showPassword ? 'text' : 'password'"
-            label="Contraseña"
+            v-model="user.currentPassword"
+            type="password"
+            label="Contraseña Actual"
             prepend-icon="mdi-lock"
-            :append-icon="showPassword ? 'mdi-eye-off' : 'mdi-eye'"
-            @click:append="showPassword = !showPassword"
+            variant="underlined"
+          ></v-text-field>
+        </v-col>
+        <v-col v-if="showChangePassword" cols="12" md="3">
+          <v-text-field
+            v-model="user.newPassword"
+            type="password"
+            label="Nueva Contraseña"
+            prepend-icon="mdi-lock"
             variant="underlined"
           ></v-text-field>
         </v-col>
       </div>
-      
+
       <!-- Botón Guardar cambios -->
       <v-btn
         class="save-button"
@@ -113,8 +147,10 @@ const handleSaveChanges = async () => {
       </v-btn>
     </div>
   </div>
+  <v-snackbar v-model="showSnackbar" :color="snackbarColor" timeout="3000">
+    {{ snackbarMessage }}
+  </v-snackbar>
 </template>
-
 <style scoped>
 .borde {
   border: 1px solid var(--v-theme-light-line);

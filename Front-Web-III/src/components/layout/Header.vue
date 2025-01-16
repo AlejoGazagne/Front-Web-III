@@ -3,6 +3,7 @@ import { ref, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import { useAuthStore } from '../../stores/useAuthStore';
 import type { UserData } from '@/types/user';
+import { formatRoles } from '@/utils/formatRoles';
 
 const router = useRouter();
 const userAuthStore = useAuthStore();
@@ -11,7 +12,6 @@ const userAuthStore = useAuthStore();
 const searchQuery = ref<string>('');
 const showMenu = ref<boolean>(false);
 const userData: UserData = userAuthStore.getUserData;
-const roles = userData.roles.map(role => role.slice(5)).join(', ').toLowerCase();
 
 function goToProfile(){
   router.push('/profile');
@@ -26,36 +26,16 @@ function handleLogout() {
 
 <template>
   <v-app>
-    <v-app-bar app dense flat class="top-bar px-15">
+    <v-app-bar class="top-bar px-15">
       <v-row class="align-center d-flex justify-space-between" no-gutters>
         <!-- Logo y título -->
         <v-col cols="2" class="d-flex align-center">
           <img src="../../assets/sin-fondo.webp" alt="Logo empresa" width="90px">
-          <span class="mx-5 text-title-1 font-weight-bold">Nombre empresa</span>
+          <span class="mx-5 text-title-1 font-weight-bold">FleetFill Services</span>
         </v-col>
-        <!-- Barra de búsqueda
-        <v-col class="d-flex align-center">
-          <v-text-field
-            v-model="searchQuery"
-            label="Search by client name or product"
-            outlined
-            dense
-            hide-details
-            clearable
-            prepend-icon="mdi-pencil"
-            background-color="#f7f7f7"
-            class="rounded-lg shadow-lg"
-            rounded
-          />
-        </v-col> -->
 
         <!-- Perfil del usuario -->
         <div class="d-flex section-right">
-          <v-btn class="text-none btn" height="50px" stacked>
-            <v-badge color="error" content="2">
-              <Icon icon="iconamoon:notification" height="24px" />
-            </v-badge>
-          </v-btn>
 
           <v-menu v-model="showMenu" bottom offset-y >
             <template #activator="{ props }">
@@ -65,7 +45,7 @@ function handleLogout() {
                 </v-avatar>
                 <div class="text-right">
                   <div class="text-body-1 font-weight-bold">{{ userData.name.toUpperCase() }}</div>
-                  <div class="text-caption">{{ roles }}</div>
+                  <div class="text-caption">{{ formatRoles(userData.roles) }}</div>
                 </div>
               </v-btn>
             </template>
@@ -103,8 +83,7 @@ function handleLogout() {
 
 .top-bar {
   background-color: #ffffff;
-  border-bottom: 1px solid #e6e6e6;
-  box-shadow: 0 2px 4px #a5a5a51a;
+  /* box-shadow: 0 2px 4px #ececec7a;*/
   color: #333333;
 }
 

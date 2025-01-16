@@ -1,12 +1,10 @@
 <script lang="ts" setup>
-import Header from '@/components/layout/Header.vue';
-import Menu from '@/components/layout/Menu.vue';
-import LoadingTruck from '@/components/common/LoadingTruck.vue';
-import { theme } from '@/assets/theme';
-
 import { computed, ref, onMounted, watch } from 'vue';
 import { useOrdersStore } from '@/stores/useOrdersStore';
 import { useRoute, useRouter } from 'vue-router';
+import LoadingTruck from '@/components/common/LoadingTruck.vue';
+import { getStatusLabel, getStatusColor } from '@/utils/formatState';
+import { formatDate } from '@/utils/formatDate';
 
 const route = useRoute();
 const router = useRouter();
@@ -27,35 +25,6 @@ onMounted(async () => {
   const fetchedDetails = await ordersStore.fetchDetailOrder(idOrder);
   detailsOrder.value = fetchedDetails;
 });
-
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'RECEIVED':
-      return theme.colors.received;
-    case 'FIRST_WEIGHING':
-      return theme.colors.firstWeighing;
-    case 'CHARGED':
-      return theme.colors.charged;
-    case 'FINAL_WEIGHING':
-      return theme.colors.finalWeighing;
-    default:
-      return 'grey';
-  }
-};
-
-// Formatear las fechas
-const formatDate = (date: string | null | undefined) => {
-  if (!date) return 'N/A';
-  const parsedDate = new Date(date);
-  return parsedDate.toLocaleDateString('es-ES', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-  });
-};
 
 // Inicializar timeline vacío
 const timeline = ref<{ label: string; date: string }[]>([]);
@@ -102,15 +71,6 @@ const goHome = () => {
 </script>
 
 <template>
-  <v-app>
-    <v-app-bar app clipped >
-      <Header />
-    </v-app-bar>
-    
-    <Menu />
-
-    <!-- Contenido principal -->
-    <v-main class="mt-10 ml-15 mr-15">
       <v-row class="mb-6 align-center">
         <v-btn height="50px" class="mr-6" @click="goHome">
           <Icon icon="material-symbols:arrow-back-rounded" height="24px" />
@@ -124,7 +84,7 @@ const goHome = () => {
           <v-col cols="12" md="6" lg="8">
             <h3 class="mb-1">Order #{{ order.id }}</h3>
             <v-chip :color="getStatusColor(order.status as string)" text-color="white" tile>
-              {{ order.status }}
+              {{ getStatusLabel(order.status as string) }}
             </v-chip>
           </v-col>
 
@@ -138,7 +98,7 @@ const goHome = () => {
 
         <div>
           <span class="text-subtitle-2">Contraseña: </span><strong>{{ order.password }}</strong><br>
-          <span class="text-subtitle-2">Preset: </span><strong>{{ order.preset }}</strong>
+          <span class="text-subtitle-2">Preset: </span><strong>{{ order.preset }} kg</strong>
         </div>
 
         <v-row class="mt-4">
@@ -150,10 +110,6 @@ const goHome = () => {
             <p class="text-subtitle-2">Fecha Fin:</p>
             <p class="text-body-2"> <strong>{{ formatDate(order.dateFinalWeighing?.toISOString()) }}</strong></p>
           </v-col>
-          <!-- <v-col cols="12" md="3">
-            <p class="text-subtitle-2">Updated:</p>
-            <p class="text-body-1">2024-02-13, 12:56</p>
-          </v-col> -->
         </v-row>
       </div>
 
@@ -214,7 +170,7 @@ const goHome = () => {
         </v-row>
       </div>
 
-      <!-- Probando -->
+      <!-- Fechas -->
       <div v-if="order" class="borde mb-8">
         <h3 class="mb-3">Historial de fechas</h3>
         <div class="progress-bar">
@@ -270,11 +226,11 @@ const goHome = () => {
             </div>
             
             <div class="custom-box">
-              <p>Peso Final de Carga: <strong>{{ order.finalChargeWeight }}</strong></p>
-              <p>Última Masa Acumulada: <strong>{{ order.lastAccumulatedMass }}</strong></p>
-              <p>Última Densidad: <strong>{{ order.lastDensity }}</strong></p>
-              <p>Última Temperatura: <strong>{{ order.lastTemperature }}</strong></p>
-              <p>Último Caudal: <strong>{{ order.lastCaudal }}</strong></p>
+              <p>Peso Final de Carga: <strong>{{ order.finalChargeWeight }} kg</strong></p>
+              <p>Última Masa Acumulada: <strong>{{ order.lastAccumulatedMass }} kg</strong></p>
+              <p>Última Densidad: <strong>{{ order.lastDensity }} g/cm³</strong></p>
+              <p>Última Temperatura: <strong>{{ order.lastTemperature }}°C</strong></p>
+              <p>Último Caudal: <strong>{{ order.lastCaudal }} g/s</strong></p>
               <p>Última Fecha carga: <strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</strong></p>
             </div>
           </v-col>
@@ -282,9 +238,6 @@ const goHome = () => {
 
         <LoadingTruck class="borde load" v-bind:preset=5000 />
       </div>
-      
-    </v-main>
-  </v-app>
 </template>
 
 <style scoped>

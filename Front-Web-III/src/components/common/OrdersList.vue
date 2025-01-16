@@ -6,7 +6,7 @@ import { useOrdersStore } from '@/stores/useOrdersStore';
 const ordersStore = useOrdersStore();
 
 const page = ref(1);
-const orders = computed(() => ordersStore.getAllOrders);
+const orders = computed(() => ordersStore.orders);
 const totalPages = computed(() => ordersStore.totalPages);
 const countOrders = computed(() => ordersStore.countOrders);
 const status = ref<string | null>(null);
