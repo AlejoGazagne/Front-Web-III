@@ -5,7 +5,7 @@ const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable
 
 export const fetchRoles = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/roles`, {
+    const response = await axios.get(`${API_BASE_URL}/users/roles`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -22,7 +22,7 @@ export const fetchRoles = async () => {
 
 export const fetchUsers = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/users`, {
+    const response = await axios.get(`${API_BASE_URL}/users/`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -38,7 +38,7 @@ export const fetchUsers = async () => {
 
 export const editUser = async (user: any) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/sap/user`, user, {
+    const response = await axios.put(`${API_BASE_URL}/users/${user.id}`, user, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -54,7 +54,7 @@ export const editUser = async (user: any) => {
 
 export const addUser = async (user: any) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/sap/user`, user, {
+    const response = await axios.post(`${API_BASE_URL}/users/add`, user, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -70,7 +70,7 @@ export const addUser = async (user: any) => {
 
 export const editarUsuario = async (user: any) => {
   try {
-    const response = await axios.post(`${API_BASE_URL}/sap/profile/user`, user, {
+    const response = await axios.post(`${API_BASE_URL}/users/profile/${user.id}`, user, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

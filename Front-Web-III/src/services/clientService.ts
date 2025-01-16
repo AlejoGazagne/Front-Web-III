@@ -4,7 +4,7 @@ const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable
 
 export const fetchCountClients = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/countClients`, {
+    const response = await axios.get(`${API_BASE_URL}/clients/countClients`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
