@@ -1,9 +1,12 @@
 <script lang="ts" setup>
+import Profile from '@/components/common/Profile.vue';
 
 </script>
 
 <template>
-  <h1>Profile view</h1>
+
+  <Profile />
+
 </template>
 
 <style scoped>

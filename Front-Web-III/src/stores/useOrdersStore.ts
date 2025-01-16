@@ -17,12 +17,11 @@ export const useOrdersStore = defineStore('orders', {
     pageSize: 7,
     currentFilter: '' as string | null,
   }),
+
   actions: {
     async fetchOrders(page: number, filter: string | null) {
       try {
-        console.log('Filter: ', filter);
         const response = await fetchOrders(page - 1, this.pageSize, filter);
-        console.log(response)
 
         this.orders = response.content.map(mapOrderFromResponse);
 
@@ -59,13 +58,17 @@ export const useOrdersStore = defineStore('orders', {
     async fetchCountOrders() {
       const response = await fetchCountOrders();
     
-      const countOrders = {};
-      response.states.forEach((stateObj) => {
+      const countOrders: { [key: string]: number } = {};
+
+      response.states.forEach((stateObj: { state: string ; count: number; }) => {
         countOrders[stateObj.state] = stateObj.count;
       });
     
       this.countOrders = {
-        ...countOrders,
+        received: countOrders.received || 0,
+        weighed: countOrders.weighed || 0,
+        charged: countOrders.charged || 0,
+        finished: countOrders.finished || 0,
         totalOrders: response.total,
       };
     
@@ -94,7 +97,6 @@ export const useOrdersStore = defineStore('orders', {
         return null;
       }
     
-      console.log('Searching for order ID:', orderId);
       const order = state.orders.find((order) => order.externalId === orderId);
     
       if (!order) {

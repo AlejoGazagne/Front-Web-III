@@ -2,15 +2,15 @@ import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable de entorno
 
-export const fetchCountClients = async () => {
+export const fetchCountAlarms = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/clients/countClients`, {
+    const response = await axios.get(`${API_BASE_URL}/alarms/count`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       }
     });
-
+    
     return response.data;
   } catch (error) {
     handleError(error);

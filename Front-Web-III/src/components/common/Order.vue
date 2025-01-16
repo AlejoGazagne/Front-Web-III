@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { ref } from 'vue';
 import { useRouter } from 'vue-router';
+import { getStatusColor } from '@/utils/formatState';
+import { getStatusLabel } from '@/utils/formatState';
 
 const router = useRouter();
 
@@ -11,21 +12,6 @@ const props = defineProps({
   },
 });
 
-const getStatusColor = (status: string) => {
-  switch (status) {
-    case 'RECEIVED':
-      return 'blue';
-    case 'FIRST_WEIGHING':
-      return 'grey';
-    case 'CHARGED':
-      return 'orange';
-    case 'FINAL_WEIGHING':
-      return 'green';
-    default:
-      return 'grey';
-  }
-};
-
 const goToOrderDetail = () => {
   router.push({ name: 'OrderDetail', params: { id: props.order.id } });
 };
@@ -33,7 +19,7 @@ const goToOrderDetail = () => {
 </script>
 
 <template>
-  <div class="d-flex align-center justify-space-between order px-6 object">
+  <div class="object d-flex align-center justify-space-between order px-6">
       <!-- Order ID -->
       <div class="col">
         <p class="item" >Id Order</p>
@@ -68,7 +54,7 @@ const goToOrderDetail = () => {
       <div class="d-flex flex-column align-center col">
         <p class="item">Estado</p>
         <v-chip :color="getStatusColor(props.order.status)" text-color="white">
-          {{ props.order.status }}
+          {{ getStatusLabel(props.order.status) }}
         </v-chip>
       </div>
 
@@ -92,12 +78,13 @@ const goToOrderDetail = () => {
 }
 .object{
   width: 98%;
+  background-color: var(--v-theme-light-background);
 }
 .order{
   height: 5rem;
   border-radius: 10px;
   margin-bottom: 1.3rem;
-  border: 1px solid #d6d6d6;
-  box-shadow: 0 0 10px #d4d4d4;
+  border: 1px solid var(--v-theme-light-line);
+  box-shadow: 0 0 10px var(--v-theme-light-line);
 }
 </style>

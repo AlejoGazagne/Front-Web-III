@@ -13,7 +13,7 @@ export const fetchOrders = async (currentPage: number, pageSize: number, current
       params.filter = currentFilter;
     }
 
-    const response = await axios.get(`${API_BASE_URL}/sap/orders`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -30,7 +30,7 @@ export const fetchOrders = async (currentPage: number, pageSize: number, current
 
 export const fetchOrderById = async (orderId: string) => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/order/${orderId}`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/${orderId}`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -45,7 +45,7 @@ export const fetchOrderById = async (orderId: string) => {
 
 export const fetchDetailsOrder = async (orderId: string) => {
 try {
-    const response = await axios.get(`${API_BASE_URL}/sap/order/${orderId}/details`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/${orderId}/details`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -60,7 +60,7 @@ try {
 
 export const fetchCountOrders = async () => { // TODO: mejorar nombre de la función
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/orders/count`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/count`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -76,7 +76,7 @@ export const fetchCountOrders = async () => { // TODO: mejorar nombre de la func
 
 export const fetchAllOrdersCount = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/orders/all-orders-count`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/all-orders-count`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -92,7 +92,7 @@ export const fetchAllOrdersCount = async () => {
 
 export const fetchProductsCount = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/orders/products-count`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/products-count`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -108,7 +108,7 @@ export const fetchProductsCount = async () => {
 
 export const fetchCountAllClients = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/sap/orders/count-all-clients`, {
+    const response = await axios.get(`${API_BASE_URL}/orders/count-all-clients`, {
       headers: {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${localStorage.getItem('token')}`,

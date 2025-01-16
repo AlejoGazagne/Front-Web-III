@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import { fetchCountClients } from '@/services/clientService';
 import { fetchCountOrders } from '@/services/orderService';
+import { fetchCountAlarms } from '@/services/alarmService';
 
 const fivecards = ref([
   {
@@ -10,7 +11,7 @@ const fivecards = ref([
     color: 'primary',
     icon: 'mdi-account-tag-outline',
     fetchData: fetchCountClients,
-    mapData: (data) => ({ earn: data.totalClients.toString() }),
+    mapData: (data: { totalClients: { toString: () => any; }; }) => ({ earn: data.totalClients.toString() }),
   },
   {
     name: 'Ordenes terminadas',
@@ -18,16 +19,16 @@ const fivecards = ref([
     percent: '',
     color: 'success',
     icon: 'mdi-package-variant-closed-check',
-    fetchData: fetchCountOrders, // No procesamos total ni states aquí
+    fetchData: fetchCountOrders,
   },
-  // {
-  //   name: 'Total Order',
-  //   earn: '18,800',
-  //   percent: '27.4%',
-  //   color: 'warning',
-  //   icon: 'mdi-cart-outline',
-  //   text: '1,943'
-  // },
+  {
+    name: 'Alarmas',
+    earn: '15',
+    percent: '27.4%',
+    color: 'error',
+    icon: 'mdi-alert-rhombus-outline',
+    fetchData: fetchCountAlarms,
+  },
   // {
   //   name: 'Total Sales',
   //   earn: '$35,078',
@@ -40,12 +41,13 @@ const fivecards = ref([
 
 const updateCards = async () => {
   for (const card of fivecards.value) {
+
     try {
       const data = await card.fetchData();
 
       if (card.name === 'Ordenes terminadas') {
         const total = data.total;
-        const finishedState = data.states.find((state) => state.state === 'finished');
+        const finishedState = data.states.find((state: { state: string; }) => state.state === 'finished');
         const finishedCount = finishedState ? finishedState.count : 0;
 
         card.earn = finishedCount.toString();
@@ -65,7 +67,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-row>
+  <v-row class="ml-1">
     <v-col cols="12" sm="6" md="3" v-for="(card5, i) in fivecards" :key="i" :value="card5">
       <v-card elevation="0">
         <v-card variant="outlined" class="my-card">

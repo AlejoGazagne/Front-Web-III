@@ -6,7 +6,7 @@ import { useOrdersStore } from '@/stores/useOrdersStore';
 const ordersStore = useOrdersStore();
 
 const page = ref(1);
-const orders = computed(() => ordersStore.getAllOrders);
+const orders = computed(() => ordersStore.orders);
 const totalPages = computed(() => ordersStore.totalPages);
 const countOrders = computed(() => ordersStore.countOrders);
 const status = ref<string | null>(null);
@@ -35,7 +35,7 @@ watch(page, (newPage) => {
   <section>
     <v-row class="d-flex justify-space-between bar">
       <v-col cols="1">
-        <h2>Ordenes</h2>
+        <h2 class="text-h5">Ordenes</h2>
       </v-col>
       <div class="d-flex justify-lg-space-between options">
         <v-btn
@@ -44,8 +44,8 @@ watch(page, (newPage) => {
           :class="{ 'v-btn--active': status === 'RECEIVED' }"
           @click="toggleStatus('RECEIVED')"
         >
-          Recibidos
-          <v-chip class="ml-2" color="secondary" text-color="white" pill>{{ countOrders.received }}</v-chip>
+          <p class="text-subtitle-2">Recibidos</p>
+          <v-chip class="ml-2" color="received" pill>{{ countOrders.received }}</v-chip>
         </v-btn>
         <v-btn
           outlined
@@ -53,8 +53,8 @@ watch(page, (newPage) => {
           :class="{ 'v-btn--active': status === 'FIRST_WEIGHING' }"
           @click="toggleStatus('FIRST_WEIGHING')"
         >
-          Pesados
-          <v-chip class="ml-2" color="secondary" text-color="white" pill>{{ countOrders.weighed }}</v-chip>
+          <p class="text-subtitle-2">Pesados</p>
+          <v-chip class="ml-2" color="firstWeighing" pill>{{ countOrders.weighed }}</v-chip>
         </v-btn>
         <v-btn
           outlined
@@ -62,8 +62,8 @@ watch(page, (newPage) => {
           :class="{ 'v-btn--active': status === 'CHARGED' }"
           @click="toggleStatus('CHARGED')"
         >
-          Cargados
-          <v-chip class="ml-2" color="secondary" text-color="white" pill>{{ countOrders.charged }}</v-chip>
+          <p class="text-subtitle-2">Cargados</p>
+          <v-chip class="ml-2" color="charged" pill>{{ countOrders.charged }}</v-chip>
         </v-btn>
         <v-btn
           outlined
@@ -71,8 +71,8 @@ watch(page, (newPage) => {
           :class="{ 'v-btn--active': status === 'FINAL_WEIGHING' }"
           @click="toggleStatus('FINAL_WEIGHING')"
         >
-          Completado
-          <v-chip class="ml-2" color="secondary" text-color="white" pill>{{ countOrders.finished }}</v-chip>
+          <p class="text-subtitle-2">Completado</p>
+          <v-chip class="ml-2" color="finalWeighing" pill>{{ countOrders.finished }}</v-chip>
         </v-btn>
       </div>
     </v-row>
@@ -106,9 +106,4 @@ watch(page, (newPage) => {
   margin-top: 2rem;
   width: 100%;
 }
-
-/* .v-btn--active {
-  background-color: #e0e0e0;
-  border-color: #b0b0b0;
-} */
 </style>

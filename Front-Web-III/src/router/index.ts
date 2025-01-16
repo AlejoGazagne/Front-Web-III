@@ -1,6 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/useAuthStore';
-import { components } from 'vuetify/dist/vuetify-labs.js';
+import Layout from '@/components/layout/Layout.vue';
 
 const routes = [
   // Rutas de autenticación
@@ -11,6 +11,7 @@ const routes = [
   // Rutas del administrador
   {
     path: '/admin/',
+    component: Layout,
     // component: () => import('../views/admin/AdminView.vue'), // Cambiar por la primer vista del admin
     meta: { requiresAdmin: true, role: 'ROLE_ADMIN' },
     children: [
@@ -20,7 +21,7 @@ const routes = [
       },
       {
         path: 'admin-panel',
-        component: () => import('../views/admin/AdminView.vue'),
+        component: () => import('../views/admin/ManageUsersView.vue'),
       },
     ],
   },
@@ -29,23 +30,27 @@ const routes = [
   // Rutas comparidas
   {
     path: '/',
-    component: () => import('../views/shared/HomeView.vue'),
+    component: Layout,
     meta: { requiresAuth: true },
-  },
-  {
-    path: '/dashboard',
-    component: () => import('../views/shared/DashboardView.vue'),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/profile',
-    component: () => import('../views/shared/ProfileView.vue'),
-    meta: { requiresAuth: true },
-  },
-  {
-    path: '/order/:id',
-    name: 'OrderDetail',
-    component: () => import('../views/shared/OrderDetailView.vue'),
+    children: [
+      {
+        path: '',
+        component: () => import('../views/shared/HomeView.vue'),
+      },
+      {
+        path: 'dashboard',
+        component: () => import('../views/shared/DashboardView.vue'),
+      },
+      {
+        path: 'profile',
+        component: () => import('../views/shared/ProfileView.vue'),
+      },
+      {
+        path: 'order/:id',
+        name: 'OrderDetail',
+        component: () => import('../views/shared/OrderDetailView.vue'),
+      },
+    ],
   },
 ];
 

@@ -1,15 +1,16 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { fetchCountAllClients } from '@/services/orderService';
+import { theme } from '@/assets/theme';
 
 // Colores utilizados en el gráfico
 const colors = [
-  '#008FFB', '#00E396', '#FEB019', '#FF4560', '#775DD0',
-  '#546E7A', '#26A69A', '#D10CE8'
+  theme.colors.option3, theme.colors.option4, theme.colors.option5, theme.colors.option6,
+  theme.colors.option7, theme.colors.option8, theme.colors.option9, theme.colors.option10
 ];
 
 // Datos del gráfico
-const series = ref([
+const series = ref<{ data: number[] }[]>([
   {
     data: [],
   },
@@ -41,9 +42,7 @@ const chartOptions = ref({
     show: false,
   },
   xaxis: {
-    categories: [
-      
-    ],
+    categories: [] as string[],
     labels: {
       style: {
         colors: colors,
@@ -73,15 +72,17 @@ onMounted(() =>{
 </script>
 
 <template>
-  <div>
+  <div class="custom-card">
     <h3 class="text-h5">Clientes con más ordenes</h3>
-    <apexchart type="bar" height="300" :options="chartOptions" :series="series" class="my-card"></apexchart>
+    <apexchart type="bar" height="300" :options="chartOptions" :series="series"></apexchart>
   </div>
 </template>
 
 <style scoped>
-.my-card {
-  border: 1px solid #cfcfcf;
-  border-radius: 5px;
+.custom-card{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
+  padding: 1rem;
+  border-radius: 10px;
 }
 </style>

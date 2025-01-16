@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { onMounted, ref } from 'vue';
 import { fetchProductsCount } from '@/services/orderService';
+import { theme } from '@/assets/theme';
 
 const series = ref([
   {
@@ -14,6 +15,7 @@ const chartOptions = ref({
   legend: {
     show: false,
   },
+  colors: [ theme.colors.option2 ],
   chart: {
     type: 'treemap',
     toolbar: {
@@ -21,6 +23,12 @@ const chartOptions = ref({
     },
     zoom: {
       enabled: false,
+    },
+  },
+  dataLabels: {
+    enabled: true,
+    style: {
+      colors: ['#081324'], // Definir el color del texto como negro
     },
   },
 });
@@ -49,7 +57,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div>
+  <div class="custom-card">
     <h3 class="text-h5">Productos más pedidos</h3>
     <apexchart
       type="treemap"
@@ -57,14 +65,16 @@ onMounted(() => {
       width="900"
       :options="chartOptions"
       :series="series"
-      class="my-card pl-2 pr-2"
+      class="pl-2 pr-2"
     />
   </div>
 </template>
 
 <style scoped>
-.my-card {
-  border: 1px solid #cfcfcf;
-  border-radius: 5px;
+.custom-card{
+  border: 1px solid var(--v-theme-light-line);
+  background-color: var(--v-theme-light-background);
+  padding: 1rem;
+  border-radius: 10px;
 }
 </style>
