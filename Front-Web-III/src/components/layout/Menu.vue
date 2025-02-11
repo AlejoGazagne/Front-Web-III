@@ -18,11 +18,15 @@ const items = computed(() => {
       ...commonItems,
       { text: 'Admin Panel', icon: 'mdi-shield-account', action: () => router.push('/admin/admin-panel'), },
       { text: 'Add Product', icon: 'mdi-plus', action: () => router.push('/admin/products'), },
+      
+
     ];
-  } else if (roles.includes('Operator')) {
+  } else if (roles.includes('ROLE_CHARGING_SYSTEM')) {
     return [
       ...commonItems,
       { text: 'Profile', icon: 'mdi-account', action: () => router.push('/profile'), },// TODO: agregar ruta y componente
+      
+
     ];
   } else {
     return commonItems;

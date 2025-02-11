@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 import { useAuthStore } from '../stores/useAuthStore';
 import { components } from 'vuetify/dist/vuetify-labs.js';
 
+
+
 const routes = [
   // Rutas de autenticación
   {
@@ -25,7 +27,7 @@ const routes = [
     ],
   },
   // Rutas del Operator
-
+  
   // Rutas comparidas
   {
     path: '/',
@@ -47,6 +49,11 @@ const routes = [
     name: 'OrderDetail',
     component: () => import('../views/shared/OrderDetailView.vue'),
   },
+  {
+    path: '/websocket-test',
+    component: () => import('../views/shared/WebsocketTestView.vue'),
+    meta: { requiresAuth: true },
+  }
 ];
 
 const router = createRouter({

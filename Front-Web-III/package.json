@@ -24,11 +24,12 @@
     "axios": "^1.7.7",
     "jwt-decode": "^4.0.0",
     "pinia": "^2.2.6",
+    "sockjs-client": "^1.6.1",
     "stompjs": "^2.3.3",
     "vue": "^3.5.13",
     "vue-router": "^4.4.5",
     "vue3-apexcharts": "^1.8.0",
-    "vuetify": "^3.7.0-beta.1"
+    "vuetify": "^3.7.6"
   },
   "devDependencies": {
     "@iconify/vue": "^4.1.2",
