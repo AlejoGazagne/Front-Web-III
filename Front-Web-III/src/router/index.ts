@@ -50,6 +50,10 @@ const routes = [
         name: 'OrderDetail',
         component: () => import('../views/shared/OrderDetailView.vue'),
       },
+      {
+        path: '/websocket-test',
+        component: () => import('../views/shared/WebSocketTestView.vue'),
+      }
     ],
   },
 ];
