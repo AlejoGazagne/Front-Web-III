@@ -1,6 +1,7 @@
 import { defineStore } from 'pinia';
 import type { UserData } from '../types/user';
 import { login } from '../services/authService';
+import { connect, disconnect } from '../services/wsService';
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
@@ -25,6 +26,8 @@ export const useAuthStore = defineStore('auth', {
         };
 
         this.setUserData(userData);
+
+        connect(response.token);
 
         return true;
       } catch (error) {
@@ -58,6 +61,7 @@ export const useAuthStore = defineStore('auth', {
       this.token = null;
       this.userData.roles = [];
       this.userData = {} as UserData;
+      disconnect();
       this._clearLocalStorage();
     },
 
