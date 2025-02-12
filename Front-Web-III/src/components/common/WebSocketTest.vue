@@ -68,6 +68,7 @@
       messages.value.push(parsedMessage.content);
     });
   }
+  
   function onError(error) {
     console.log("sexo4");
     console.error("Error connecting to WebSocket:", error);
