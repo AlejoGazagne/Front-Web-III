@@ -2,7 +2,7 @@
 import { computed, ref, onMounted, watch } from 'vue';
 import { useOrdersStore } from '@/stores/useOrdersStore';
 import { useRoute, useRouter } from 'vue-router';
-import LoadingTruck from '@/components/common/LoadingTruck.vue';
+//import LoadingTruck from '@/components/common/LoadingTruck.vue';
 import { getStatusLabel, getStatusColor } from '@/utils/formatState';
 import { formatDate } from '@/utils/formatDate';
 
@@ -194,7 +194,7 @@ const goHome = () => {
       </div>
 
       <!-- Datos de carga -->
-        <v-row class="mb-5 mr-1 ml-1">
+        <v-row class="mb-5 mr-1 ml-1 mb-15">
           <v-col class="mr-3 borde">
             <h3 class="mb-3">Datos de carga</h3>
             <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
@@ -236,7 +236,7 @@ const goHome = () => {
           </v-col>
         </v-row>
 
-        <LoadingTruck class="borde load" v-bind:preset=5000 />
+        <!-- <LoadingTruck class="borde load" v-bind:preset=5000 /> -->
       </div>
 </template>
 
