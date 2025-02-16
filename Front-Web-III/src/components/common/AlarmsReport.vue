@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { theme } from '@/assets/theme';
+import { fetchAlertsCountByMonth } from '@/services/alarmService';
 
 const chartOptions1 = computed(() => {
   return {
@@ -55,18 +56,35 @@ const chartOptions1 = computed(() => {
 });
 
 // chart 1
-const barChart1 = {
+const barChart1 = ref({
   series: [
     {
-      name: 'Income',
-      data: [180, 90, 135, 114, 120, 145]
+      name: '',
+      data: []
     },
-    {
-      name: 'Cost Of Sales',
-      data: [120, 45, 78, 150, 168, 99]
-    }
   ]
+});
+
+// Función para procesar los datos del backend
+const processChartData = (data: any[]) => {
+  return data.map(product => ({
+    name: product.productName, // Nombre del producto
+    data: product.data.map((monthData: any) => monthData.totalAlarms) // Total de alarmas por mes
+  }));
 };
+
+// Cargar datos al montar el componente
+onMounted(async () => {
+  try {
+    const alertsCountByMonth = await fetchAlertsCountByMonth();
+
+    // Procesar datos y actualizar gráfico
+    barChart1.value.series = processChartData(alertsCountByMonth);
+    //console.log('Datos procesados para ApexCharts:', barChart1.value.series);
+  } catch (error) {
+    console.error('Error al obtener los datos:', error);
+  }
+});
 
 </script>
 
