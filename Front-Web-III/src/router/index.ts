@@ -51,6 +51,10 @@ const routes = [
         component: () => import('../views/shared/OrderDetailView.vue'),
       },
       {
+        path: '/realtime-truck-loading',
+        component: () => import('../views/shared/RealTimeLoadingView.vue'),
+      },
+      {
         path: '/alarms',
         component: () => import('../views/shared/AlarmsView.vue'),
       }

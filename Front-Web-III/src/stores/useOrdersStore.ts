@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia';
 import type { Order } from '@/types/order';
-import { fetchOrders, fetchOrderById, fetchDetailsOrder, fetchCountOrders } from '@/services/orderService';
+import { fetchOrders, fetchOrderById, fetchDetailsOrder, fetchCountOrders, fetchOrderByInternalId } from '@/services/orderService';
 import { mapOrderFromResponse } from '@/types/mappers/orderMapper';
 
 export const useOrdersStore = defineStore('orders', {
@@ -48,6 +48,22 @@ export const useOrdersStore = defineStore('orders', {
         console.error('Error al buscar la orden en el backend:', error);
         throw error;
       }
+    },
+
+    async fetchByInternalId(orderId: number){
+      try {
+        const response = await fetchOrderByInternalId(orderId);
+
+        const order = mapOrderFromResponse(response);
+
+        this.orders.push(order);
+
+        return order;
+      } catch (error) {
+        console.error('Error al buscar la orden en el backend:', error);
+        throw error;
+      }
+
     },
 
     async fetchDetailOrder(orderId: string){
