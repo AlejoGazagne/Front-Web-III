@@ -53,6 +53,10 @@ const routes = [
       {
         path: '/realtime-truck-loading',
         component: () => import('../views/shared/RealTimeLoadingView.vue'),
+      },
+      {
+        path: '/alarms',
+        component: () => import('../views/shared/AlarmsView.vue'),
       }
     ],
   },

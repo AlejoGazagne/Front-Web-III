@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import AlarmOrder from './AlarmOrder.vue';
+import AlarmOrder from '@/components/common/AlarmOrder.vue';
 
 </script>
 

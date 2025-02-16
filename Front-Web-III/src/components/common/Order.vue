@@ -60,7 +60,7 @@ const goToOrderDetail = () => {
 
       <!-- See more button -->
       <div class="text-right col">
-        <v-btn text color="primary" @click="goToOrderDetail" >
+        <v-btn color="primary" @click="goToOrderDetail" >
           Ver más
         </v-btn>
       </div>

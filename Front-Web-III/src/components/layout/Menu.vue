@@ -16,6 +16,7 @@ const items = computed(() => {
   const commonItems = [
     { text: 'Ordenes', icon: 'mdi-truck', path: '/' },
     { text: 'Dashboard', icon: 'mdi-chart-box-outline', path: '/dashboard' },
+    { text: 'Alarmas', icon: 'mdi-alert-outline', path: '/alarms' },
   ];
 
   if (roles.includes('ROLE_ADMIN')) {
@@ -82,7 +83,7 @@ watch(
 
 <style scoped>
 .active-item {
-  background-color: #091c478a;
+  background-color: #354b7c8a;
   border-radius: 4px;
 }
 
