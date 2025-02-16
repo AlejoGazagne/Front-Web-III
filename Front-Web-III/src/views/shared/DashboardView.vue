@@ -4,8 +4,8 @@ import WidgetFive from '@/components/common/WidgetFive.vue';
 import DonutChart from '@/components/common/DonutChart.vue';
 import Treemap from '@/components/common/Treemap.vue';
 import ColumnChart from '@/components/common/ColumnChart.vue';
-import AlarmsList from '@/components/admin/AlarmsList.vue';
-import AlarmsReport from '@/components/admin/AlarmsReport.vue';
+import AlarmsList from '@/components/common/AlarmsList.vue';
+import AlarmsReport from '@/components/common/AlarmsReport.vue';
 
 </script>
 
@@ -23,19 +23,15 @@ import AlarmsReport from '@/components/admin/AlarmsReport.vue';
         </v-col>
       </v-row>
       <v-row class="mb-3">
-        <v-col>
+        <v-col cols="7">
           <Treemap/>
         </v-col>
-        <v-col>
+        <v-col cols="5">
           <ColumnChart/>
         </v-col>
-
-      </v-row>
-      <v-row class="mb-3 ml-1 mr-1">
-        <AlarmsList />
       </v-row>
       <v-row class="mb-10">
-        <v-col cols="8" class="">
+        <v-col cols="12" class="">
           <AlarmsReport />
         </v-col>
       </v-row>

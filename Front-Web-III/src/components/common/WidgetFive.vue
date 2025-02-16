@@ -23,20 +23,12 @@ const fivecards = ref([
   },
   {
     name: 'Alarmas',
-    earn: '15',
-    percent: '27.4%',
+    earn: '0',
+    percent: '',
     color: 'error',
     icon: 'mdi-alert-rhombus-outline',
     fetchData: fetchCountAlarms,
   },
-  // {
-  //   name: 'Total Sales',
-  //   earn: '$35,078',
-  //   percent: '27.4%',
-  //   color: 'error',
-  //   icon: 'mdi-currency-usd',
-  //   text: '$20,395'
-  // }
 ]);
 
 const updateCards = async () => {
@@ -54,6 +46,8 @@ const updateCards = async () => {
         card.percent = total > 0 ? ((finishedCount / total) * 100).toFixed(1) + '%' : '0%';
       } else if (card.name === 'Clientes totales') {
         card.earn = data.totalClients.toString();
+      } else if(card.name === 'Alarmas') {
+        card.earn = data.totalAlarms.toString();
       }
     } catch (error) {
       console.error(`Error al actualizar la tarjeta "${card.name}":`, error);
@@ -67,8 +61,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <v-row class="ml-1">
-    <v-col cols="12" sm="6" md="3" v-for="(card5, i) in fivecards" :key="i" :value="card5">
+  <v-row class="ml-1 mr-1">
+    <v-col cols="12" sm="6" md="4" v-for="(card5, i) in fivecards" :key="i" :value="card5">
       <v-card elevation="0">
         <v-card variant="outlined" class="my-card">
           <v-card-text>

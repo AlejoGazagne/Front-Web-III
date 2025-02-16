@@ -62,7 +62,6 @@ onMounted(() => {
     <apexchart
       type="treemap"
       height="300"
-      width="900"
       :options="chartOptions"
       :series="series"
       class="pl-2 pr-2"
