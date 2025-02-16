@@ -51,8 +51,8 @@ const routes = [
         component: () => import('../views/shared/OrderDetailView.vue'),
       },
       {
-        path: '/websocket-test',
-        component: () => import('../views/shared/WebSocketTestView.vue'),
+        path: '/realtime-truck-loading',
+        component: () => import('../views/shared/RealTimeLoadingView.vue'),
       }
     ],
   },

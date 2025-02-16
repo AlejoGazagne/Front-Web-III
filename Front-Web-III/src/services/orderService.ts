@@ -43,6 +43,21 @@ export const fetchOrderById = async (orderId: string) => {
   }
 }
 
+export const fetchOrderByInternalId = async (orderId: number) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/orders/internal/${orderId}`, {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      }
+    });
+    return response.data;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
 export const fetchDetailsOrder = async (orderId: string) => {
 try {
     const response = await axios.get(`${API_BASE_URL}/orders/${orderId}/details`, {

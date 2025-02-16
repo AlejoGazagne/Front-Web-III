@@ -23,9 +23,14 @@ const items = computed(() => {
       ...commonItems,
       { text: 'Panel de Usuarios', icon: 'mdi-shield-account', path: '/admin/admin-panel' },
       { text: 'Agregar Producto', icon: 'mdi-plus', path: '/admin/products' },
+      { text: 'Carga de camiones', icon: 'mdi-truck', path: '/realtime-truck-loading' },
     ];
   } else if (roles.includes('ROLE_OPERATOR')) {
-    return commonItems;
+    return [
+      ...commonItems,
+      { text: 'Carga de camiones', icon: 'mdi-truck', path: '/realtime-truck-loading' },
+
+    ];
   } else {
     return commonItems;
   }
