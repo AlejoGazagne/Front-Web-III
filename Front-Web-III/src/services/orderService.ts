@@ -66,6 +66,7 @@ try {
         'Authorization': `Bearer ${localStorage.getItem('token')}`,
       }
     });
+
     return response.data;
   } catch (error) {
     handleError(error);
@@ -131,6 +132,31 @@ export const fetchCountAllClients = async () => {
     });
 
     return response.data;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
+}
+
+export const fetchOrderConciliation = async (orderId: string) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/conciliation/order/${orderId}`, {
+      headers: {
+        'Authorization': `Bearer ${localStorage.getItem('token')}`,
+      },
+      responseType: 'blob',
+    });
+
+    // Crear un enlace de descarga
+    const url = window.URL.createObjectURL(new Blob([response.data]));
+    const link = document.createElement('a');
+    link.href = url;
+    link.setAttribute('download', `Conciliacion_Orden_${orderId}.pdf`); // Nombre del archivo
+    document.body.appendChild(link);
+    link.click();
+
+    // Limpiar URL para liberar memoria
+    window.URL.revokeObjectURL(url);
   } catch (error) {
     handleError(error);
     throw error;

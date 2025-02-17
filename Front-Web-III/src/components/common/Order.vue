@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const goToOrderDetail = () => {
-  router.push({ name: 'OrderDetail', params: { id: props.order.id } });
+  router.push({ name: 'OrderDetail', params: { id: props.order.externalId } });
 };
 
 </script>
@@ -23,7 +23,7 @@ const goToOrderDetail = () => {
       <!-- Order ID -->
       <div class="col">
         <p class="item" >Id Order</p>
-        <strong>{{props.order.id}}</strong>
+        <strong>{{props.order.externalId}}</strong>
       </div>
 
       <!-- Order assigned to -->

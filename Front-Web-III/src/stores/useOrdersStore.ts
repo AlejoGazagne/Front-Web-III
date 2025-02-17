@@ -107,21 +107,21 @@ export const useOrdersStore = defineStore('orders', {
   getters: {
     getAllOrders: (state) => state.orders,
   
-    getOrderById: (state) => (orderId: string) => {
-      if (state.orders.length === 0) {
-        console.warn('No orders in the store.');
-        return null;
-      }
+    // getOrderById: (state) => (orderId: string) => {
+    //   if (state.orders.length === 0) {
+    //     console.warn('No orders in the store.');
+    //     return null;
+    //   }
     
-      const order = state.orders.find((order) => order.externalId === orderId);
+    //   const order = state.orders.find((order) => order.externalId === orderId);
     
-      if (!order) {
-        console.warn(`Order with ID ${orderId} not found in store.`);
-        return null;
-      }
+    //   if (!order) {
+    //     console.warn(`Order with ID ${orderId} not found in store.`);
+    //     return null;
+    //   }
     
-      return order;
-    },
+    //   return order;
+    // },
   
     getOrdersByStatus: (state) => (status: string) => {
       return state.orders.filter((order) => order.status === status);

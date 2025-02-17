@@ -7,7 +7,7 @@ import { formatRoles } from '@/utils/formatRoles';
 
 // Obtener datos del store
 const userAuthStore = useAuthStore();
-const userData: UserData = userAuthStore.getUserData;
+const userData = computed<UserData>(() => userAuthStore.getUserData);
 
 // Estado para mostrar/ocultar contraseña
 const showChangePassword = ref(false);
@@ -18,9 +18,9 @@ const snackbarColor = ref('success'); // Color dinámico del snackbar
 
 // Copia de los datos del usuario para edición
 const user = ref({
-  id: userData.id,
-  name: userData.name,
-  mail: userData.mail,
+  id: userData.value.id,
+  name: userData.value.name,
+  mail: userData.value.mail,
   currentPassword: '',
   newPassword: ''
 });
@@ -28,8 +28,8 @@ const user = ref({
 // Computed para verificar si hubo cambios
 const hasChanges = computed(() => {
   return (
-    userData.name !== user.value.name ||
-    userData.mail !== user.value.mail ||
+    userData.value.name !== user.value.name ||
+    userData.value.mail !== user.value.mail ||
     user.value.newPassword !== ''
   );
 });
