@@ -13,7 +13,7 @@ const props = defineProps({
 });
 
 const goToOrderDetail = () => {
-  router.push({ name: 'OrderDetail', params: { id: props.order.externalId } });
+  router.push({ name: 'OrderDetail', params: { id: props.order.externalId}, query: { from: '/' } });
 };
 
 </script>

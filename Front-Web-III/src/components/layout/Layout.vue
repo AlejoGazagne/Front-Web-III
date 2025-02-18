@@ -2,7 +2,22 @@
 import Header from '@/components/layout/Header.vue';
 import Menu from '@/components/layout/Menu.vue';
 import AlertContainer from '@/components/common/AlertContainer.vue';
+import { onMounted, onUnmounted } from 'vue';
+import { connect, disconnect } from '@/services/wsService';
 
+onMounted(() => {
+  const token = localStorage.getItem('token');
+  console.log(token);
+  if (token) {
+    connect(token);
+  } else {
+    console.error('Token is null');
+  }
+});
+
+onUnmounted(() => {
+  disconnect();
+});
 </script>
 
 <template>
