@@ -14,13 +14,14 @@ const notifications = ref<{
   temperature: number;
   dateOccurrence: Date;
   orderId: number;
+  status: string;
 }[]>([]);
 
 const receivedAlerts = new Set<number>();
 
 // Manejar los mensajes del WebSocket
 const handleMessage = (message: Alert) => {
-  //console.log('📩 Recibida alerta:', message);
+  //console.log('Recibida alerta:', message);
 
   if (!receivedAlerts.has(message.id)) {
     receivedAlerts.add(message.id);
@@ -31,7 +32,8 @@ const handleMessage = (message: Alert) => {
       limitTemperature: message.limitTemperature,
       temperature: message.temperature,
       dateOccurrence: message.dateOccurrence,
-      orderId: message.orderId,
+      orderId: message.orderEId,
+      status: "",
     });
   }
 };
@@ -55,6 +57,7 @@ const showFeedback = ref(false);
 // Aceptar notificación con manejo de error
 const acceptNotification = async (alert: Alert) => {
   try {
+    alert.status = "RESOLVED"
     const response = await fetchAcceptedAlarm(alert);
 
     if (response.status === 200) {
@@ -66,13 +69,36 @@ const acceptNotification = async (alert: Alert) => {
       throw new Error(`Error: No se pudo aceptar la alerta.`);
     }
   } catch (error: any) {
-    console.error("❌ Error al aceptar la alerta:", error);
+    console.error("Error al aceptar la alerta:", error);
     feedbackMessage.value = error.message || "Error desconocido";
     feedbackColor.value = "red";
     showFeedback.value = true;
     closeNotification(alert.id);
   }
 };
+
+// Aceptar notificación crítica con manejo de error
+const criticalNotification = async (alert: Alert) => {
+  try{
+    alert.status = "CRITICAL"
+    const response = await fetchAcceptedAlarm(alert);
+    if (response.status === 200) {
+      closeNotification(alert.id);
+      feedbackColor.value = "green";
+      showFeedback.value = true;
+      feedbackMessage.value = "Alerta aceptada correctamente";
+    } else {
+      throw new Error(`Error: No se pudo aceptar la alerta.`);
+    }
+  } catch (error: any) {
+    console.error("Error al aceptar la alerta:", error);
+    feedbackMessage.value = error.message || "Error desconocido";
+    feedbackColor.value = "red";
+    showFeedback.value = true;
+    closeNotification(alert.id);
+  }
+};
+
 </script>
 
 <template>
@@ -88,6 +114,7 @@ const acceptNotification = async (alert: Alert) => {
       :orderId="notification.orderId"
       @cancel="closeNotification"
       @accept="acceptNotification"
+      @critical="criticalNotification"
     />
   </div>
 

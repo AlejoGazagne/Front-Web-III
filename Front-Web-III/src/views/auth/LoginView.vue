@@ -36,7 +36,7 @@ const submit = async () => {
 
 <template>
   <div class="d-flex flex-column align-center background">
-    <h2 class="title">Login into your account</h2>
+    <h2 class="title">Ingrese en su cuenta</h2>
     <v-card :disabled="load" :isLoading="load" class="pa-6 probando" width="500" elevation="4">
       <template v-slot:loader="{ isActive }">
         <v-progress-linear :active="isActive" color="deep-black" height="7" indeterminate></v-progress-linear>
@@ -46,7 +46,7 @@ const submit = async () => {
           
           <v-text-field
             v-model="username"
-            label="Username"
+            label="Nombre de usuario"
             required
             class="mb-4 input-field"
             test-tag="username-input"
@@ -54,7 +54,7 @@ const submit = async () => {
 
           <v-text-field
             v-model="password"
-            label="Password"
+            label="Contraseña"
             type="password"
             :rules="passwordRules"
             required

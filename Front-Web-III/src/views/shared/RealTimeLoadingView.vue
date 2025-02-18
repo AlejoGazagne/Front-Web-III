@@ -4,11 +4,8 @@ import RealTimeLoading from '@/components/common/RealTimeLoading.vue';
 </script>
 
 <template>
-    <v-main>
-        <v-col>
-                <h2 class="text-h5">Camiones cargandose actualmente...</h2>
-        </v-col>
-        <RealTimeLoading/>
-    </v-main>
-    
+  <v-col>
+    <h2 class="text-h5">Camiones cargandose: </h2>
+  </v-col>
+  <RealTimeLoading/>
 </template>
