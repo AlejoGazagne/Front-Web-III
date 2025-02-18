@@ -2,7 +2,9 @@
 import { ref, computed, onMounted, watch } from 'vue';
 import { useAlarmStore } from '@/stores/useAlarmStore';
 import { formatDate } from '@/utils/formatDate';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
 const alarmsStore = useAlarmStore();
 
 // Variables reactivas
@@ -19,8 +21,9 @@ const headers = ref([
   { title: '', key: 'actions', sortable: false, width: '10rem' },
 ]);
 
-const handleViewMore = (item: { id: any }) => {
-  console.log('Ver más de la orden:', item.id);
+const handleViewMore = (item: { orderEId: number }) => {
+  console.log('Ver más de la orden:', item.orderEId);
+  router.push({ name: 'OrderDetail', params: { id: item.orderEId }, query: { from: '/alarms' } });
 };
 
 onMounted(() => {

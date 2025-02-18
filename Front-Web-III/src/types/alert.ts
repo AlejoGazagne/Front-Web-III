@@ -4,7 +4,7 @@ export interface Alert {
   dateResolved: Date | null;
   limitTemperature: number;
   observation: string;
-  orderId: number;
+  orderEId: number;
   status: string;
   temperature: number;
   userId: number;

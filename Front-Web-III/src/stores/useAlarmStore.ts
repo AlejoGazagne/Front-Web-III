@@ -34,21 +34,21 @@ export const useAlarmStore = defineStore('alarm', {
 
     totalPages: (state) => Math.ceil(state.totalAlerts / state.pageSize),
 
-    getAlertById: (state) => (alertId: string) => {
-      if (state.alerts.length === 0) {
-        // TODO: hacer fetch al backend
-        return null;
-      }
+    // getAlertById: (state) => (alertId: string) => {
+    //   if (state.alerts.length === 0) {
+    //     // TODO: hacer fetch al backend
+    //     return null;
+    //   }
 
-      const alert = state.alerts.find((alert) => alert.id === parseInt(alertId));
+    //   const alert = state.alerts.find((alert) => alert.id === parseInt(alertId));
 
-      if (!alert) {
-        // TODO: hacer fetch al backend
-        return null;
-      }
+    //   if (!alert) {
+    //     // TODO: hacer fetch al backend
+    //     return null;
+    //   }
 
-      return alert;
-    }
+    //   return alert;
+    // }
   },
 
 });

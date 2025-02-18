@@ -15,7 +15,6 @@ const ordersStore = useOrdersStore();
 const idOrder = Array.isArray(route.params.id) ? route.params.id[0] : route.params.id;
 const order = ref<Order | null>(null);
 const detailsOrder = ref(null);
-//const alerts = ref([] as Alert[]);
 
 // Lista de alertas HARDCODEADAS
 const alerts = ref([] as Alert[]);
@@ -65,9 +64,10 @@ const timeline = ref<{ label: string; date: string }[]>([]);
 
 const parameters = ref<{ label: string; value: number }[]>([]);
 
-// Función para navegar a la página de inicio
-const goHome = () => {
-  router.push('/');
+// Función para navegar a la página de origen
+const goBack = () => {
+  const previousRoute = route.query.from || '/';
+  router.push({ path: previousRoute as string });
 };
 
 const downloadConciliation = async () => {
@@ -84,7 +84,7 @@ const downloadConciliation = async () => {
 
 <template>
   <v-row class="mb-6 align-center">
-    <v-btn height="50px" class="mr-6" @click="goHome">
+    <v-btn height="50px" class="mr-6" @click="goBack">
       <Icon icon="material-symbols:arrow-back-rounded" height="24px" />
     </v-btn>
     <p class="text-green">Order / Order Details</p>
@@ -207,87 +207,87 @@ const downloadConciliation = async () => {
     </div>
 
     <!-- Alertas -->
-       <v-row class="mb-5 mr-1 ml-1">
-        <v-col class="borde">
-          <div class="d-flex align-center mb-3">
-            <Icon icon="mdi-alert-outline" class="mr-2" height="20px"/>
-            <h3>Alertas registradas</h3>
+    <v-row class="mb-5 mr-1 ml-1" v-if="alerts.length > 0">
+      <v-col class="borde">
+        <div class="d-flex align-center mb-3">
+          <Icon icon="mdi-alert-outline" class="mr-2" height="20px"/>
+          <h3>Alertas registradas</h3>
+        </div>
+
+        <div
+          v-for="(alert, index) in alerts"
+          :key="index"
+          class="alert-item"
+          :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING' }" >
+          <div class="d-flex justify-space-between align-center">
+            <span><strong>Fecha de registro: </strong>{{ formatDate(alert.dateOccurrence) }}</span>
+            <span class="alert-status" :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', }">
+              {{ alert.status === 'RESOLVED' ? 'Resuelta' : 'Pendiente' }}
+            </span>
+
           </div>
 
-    <div
-      v-for="(alert, index) in alerts"
-      :key="index"
-      class="alert-item"
-      :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING' }"
-    >
-      <div class="d-flex justify-space-between align-center">
-        <span><strong>Fecha de registro: </strong>{{ formatDate(alert.dateOccurrence) }}</span>
-        <span class="alert-status" :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', }">
-          {{ alert.status === 'RESOLVED' ? 'Resuelta' : 'Pendiente' }}
-        </span>
+          <p v-if="alert.dateResolved" class="alert-resolved d-flex align-center mt-2 mb-2">
+            <Icon icon="mdi:checkbox-marked-outline" class="mr-2" height="20px"/>
+            <strong>Resuelta el: </strong>{{ formatDate(alert.dateResolved) }}
+          </p>
 
-      </div>
-      <p v-if="alert.dateResolved" class="alert-resolved d-flex align-center mt-2 mb-2">
-        <Icon icon="mdi:checkbox-marked-outline" class="mr-2" height="20px"/>
-        <strong>Resuelta el: </strong> {{ formatDate(alert.dateResolved) }}
-      </p>
+          <p class="alert-description mt-2 mb-2"><strong>Descripción:</strong> {{ alert.observation }}</p>
+          <p class="alert-temp mt-2 mb-2"><strong>Temperatura:</strong> {{ alert.temperature }}°C</p>
 
-      <p class="alert-description mt-2 mb-2"><strong>Descripción:</strong> {{ alert.observation }}</p>
-      <p class="alert-temp mt-2 mb-2"><strong>Temperatura:</strong> {{ alert.temperature }}°C</p>
-
-      <div v-if="alert.userName">
-        <p class="alert-user mt-2 mb-2"><strong>Registrado por:</strong> {{ alert.userName }}</p>
-      </div>
-    </div>
+          <div v-if="alert.userName">
+            <p class="alert-user mt-2 mb-2"><strong>Registrado por:</strong> {{ alert.userName }}</p>
+          </div>
+        </div>
           
-        </v-col>
-       </v-row>
+      </v-col>
+    </v-row>
 
-      <!-- Datos de carga -->
-        <v-row class="mb-5 mr-1 ml-1 mb-15">
-          <v-col class="mr-3 borde">
-            <h3 class="mb-3">Datos de carga</h3>
-            <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
+    <!-- Datos de carga -->
+    <v-row class="mb-5 mr-1 ml-1 mb-15">
+      <v-col class="mr-3 borde">
+        <h3 class="mb-3">Datos de carga</h3>
+        <p class="mb-3">Fecha de inicio de carga: {{ order.dateInitialCharge ? formatDate(order.dateInitialCharge.toISOString()) : 'N/A' }}</p>
 
-            <v-table class="border-table">
-              <thead class="header-table">
-                <tr>
-                  <th class="text-left"><strong>Parámetro de carga</strong></th>
-                  <th class="text-left"><strong>Valor</strong></th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr v-for="item in parameters" :key="item.label" >
-                  <td>{{ item.label }}</td>
-                  <td>{{ item.value }}</td>
-                </tr>
-                <tr>
-                  <td class="text-right"> <strong>Fecha final de carga:</strong></td>
-                  <td>{{ order.dateFinalCharge ? formatDate(order.dateFinalCharge.toISOString()) : 'N/A' }}</td>
-                </tr>
-              </tbody>
-            </v-table>
-          </v-col>
+        <v-table class="border-table">
+          <thead class="header-table">
+            <tr>
+              <th class="text-left"><strong>Parámetro de carga</strong></th>
+              <th class="text-left"><strong>Valor</strong></th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="item in parameters" :key="item.label" >
+              <td>{{ item.label }}</td>
+              <td>{{ item.value }}</td>
+            </tr>
+            <tr>
+              <td class="text-right"> <strong>Fecha final de carga:</strong></td>
+              <td>{{ order.dateFinalCharge ? formatDate(order.dateFinalCharge.toISOString()) : 'N/A' }}</td>
+            </tr>
+          </tbody>
+        </v-table>
+      </v-col>
 
-          <v-col class="borde" cols="4">
-            <div class="d-flex align-center mb-3">
-              <Icon icon="mdi:clipboard-text-multiple-outline" class="mr-2" height="20px"/>
-              <h3>Información de último registro</h3>
-            </div>
+      <v-col class="borde" cols="4">
+        <div class="d-flex align-center mb-3">
+          <Icon icon="mdi:clipboard-text-multiple-outline" class="mr-2" height="20px"/>
+          <h3>Información de último registro</h3>
+        </div>
             
-            <div class="custom-box">
-              <p>Peso Final de Carga: <strong>{{ order.finalChargeWeight }} kg</strong></p>
-              <p>Última Masa Acumulada: <strong>{{ order.lastAccumulatedMass }} kg</strong></p>
-              <p>Última Densidad: <strong>{{ order.lastDensity }} g/cm³</strong></p>
-              <p>Última Temperatura: <strong>{{ order.lastTemperature }}°C</strong></p>
-              <p>Último Caudal: <strong>{{ order.lastCaudal }} g/s</strong></p>
-              <p>Última Fecha carga: <strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</strong></p>
-            </div>
-          </v-col>
-        </v-row>
+        <div class="custom-box">
+          <!-- <p>Peso Final de Carga: <strong>{{ order.finalChargeWeight }} kg</strong></p> -->
+          <p>Última Masa Acumulada: <strong>{{ order.lastAccumulatedMass }} kg</strong></p>
+          <p>Última Densidad: <strong>{{ order.lastDensity }} g/cm³</strong></p>
+          <p>Última Temperatura: <strong>{{ order.lastTemperature }}°C</strong></p>
+          <p>Último Caudal: <strong>{{ order.lastCaudal }} g/s</strong></p>
+          <p>Última Fecha carga: <strong>{{ order.lastTimestamp ? formatDate(order.lastTimestamp.toISOString()) : 'N/A' }}</strong></p>
+        </div>
+      </v-col>
+    </v-row>
 
         <!-- <LoadingTruck class="borde load" v-bind:preset=5000 /> -->
-      </div>
+  </div>
 </template>
 
 <style scoped>

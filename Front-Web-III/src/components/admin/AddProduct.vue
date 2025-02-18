@@ -81,7 +81,7 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div class="contenedor custom-card">
+  <div class="custom-card">
     <!-- Encabezado -->
     <v-row class="d-flex align-center justify-space-between mb-6 mt-2 mr-2 ml-2">
       <h2>Lista de Productos</h2>
@@ -155,10 +155,6 @@ const handleSave = async () => {
 </template>
 
 <style scoped>
-.contenedor {
-  margin: 2rem 3rem;
-  width: 95%;
-}
 .custom-card{
   border: 1px solid var(--v-theme-light-line);
   background-color: var(--v-theme-light-background);

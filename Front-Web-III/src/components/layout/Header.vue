@@ -9,7 +9,6 @@ const router = useRouter();
 const userAuthStore = useAuthStore();
 
 // Variables
-const searchQuery = ref<string>('');
 const showMenu = ref<boolean>(false);
 const userData: UserData = userAuthStore.getUserData;
 

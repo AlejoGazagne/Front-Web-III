@@ -27,7 +27,7 @@ export const useAuthStore = defineStore('auth', {
 
         this.setUserData(userData);
 
-        connect(response.token);
+        //connect(response.token);
 
         return true;
       } catch (error) {

@@ -11,7 +11,7 @@ export function mapAlertFromResponse(alert: any): Alert {
         limitTemperature: alert.limitTemperature,
         status: alert.status,
         userId: alert.user,
-        orderId: alert.order,
+        orderEId: alert.orderEId,
         userName: alert.userName,
         clientName: alert.clientName
     };

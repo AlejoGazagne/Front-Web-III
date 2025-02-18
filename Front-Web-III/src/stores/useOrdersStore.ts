@@ -23,12 +23,15 @@ export const useOrdersStore = defineStore('orders', {
       try {
         const response = await fetchOrders(page - 1, this.pageSize, filter);
 
-        this.orders = response.content.map(mapOrderFromResponse);
+// Mapear y ordenar las órdenes por dateReceived en orden descendente
+this.orders = response.content
+.map(mapOrderFromResponse)
+.sort((a, b) => new Date(b.dateReceived).getTime() - new Date(a.dateReceived).getTime());
 
         this.countOrders.totalOrders = response.totalElements;
         this.currentPage = page;
         this.currentFilter = filter || null;
-        
+
       } catch (error) {
         console.error('Error al cargar las ordenes:', error);
         throw error;
