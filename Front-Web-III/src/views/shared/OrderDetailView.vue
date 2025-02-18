@@ -218,11 +218,11 @@ const downloadConciliation = async () => {
           v-for="(alert, index) in alerts"
           :key="index"
           class="alert-item"
-          :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING' }" >
+          :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', critical: alert.status === 'CRITICAL' }" >
           <div class="d-flex justify-space-between align-center">
             <span><strong>Fecha de registro: </strong>{{ formatDate(alert.dateOccurrence) }}</span>
             <span class="alert-status" :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', }">
-              {{ alert.status === 'RESOLVED' ? 'Resuelta' : 'Pendiente' }}
+              {{ alert.status === 'RESOLVED' ? 'Resuelta' : alert.status === 'PENDING' ? 'Pendiente' : 'Crítica' }}
             </span>
 
           </div>
