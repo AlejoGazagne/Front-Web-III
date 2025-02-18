@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { defineProps, defineEmits, ref } from 'vue';
+import { defineProps, defineEmits, ref, computed } from 'vue';
 import { useAuthStore } from '../../stores/useAuthStore';
 import type { UserData } from '@/types/user';
 
@@ -30,17 +30,27 @@ const alarm = ref<{
   id_user: userData.id,
 });
 
-const emit = defineEmits(['cancel', 'accept']);
+const emit = defineEmits(['cancel', 'accept', 'critical']);
 
 
 const cancelNotification = () => {
   emit('cancel', props.id);
 };
 
-const acceptNotification = () => {
+const ignoreNotification = () => {
   alarm.value.description = description.value;
   emit('accept', alarm.value);
 }
+
+const criticalNotification = () => {
+  alarm.value.description = description.value;
+  emit('critical', alarm.value);
+}
+
+// Función para calcular la diferencia de temperatura con dos decimales
+const temperatureDifference = computed(() => {
+  return (props.temperature - props.limitTemperature).toFixed(2);
+});
 </script>
 
 <template>
@@ -54,9 +64,9 @@ const acceptNotification = () => {
 
     <!-- Mensaje -->
     <v-card-text class="text-body-1">
-      El producto <strong>{{ props.productName }}</strong>, ha superado su temperatura maxima de 
-      <strong>{{ props.limitTemperature }}°C</strong> por 
-      <strong>{{ props.temperature - props.limitTemperature }}°C</strong>.
+      El producto <strong>{{ props.productName }}</strong>, ha superado su temperatura maxima de
+      <strong>{{ props.limitTemperature }}°C</strong> por
+      <strong>{{ temperatureDifference }}°C</strong>.
       <!-- La temperatura actual es de <strong>{{ props.temperature }}°C</strong>. -->
     </v-card-text>
 
@@ -77,8 +87,11 @@ const acceptNotification = () => {
       <v-btn variant="plain" class="white--text" @click="cancelNotification">
         Cerrar
       </v-btn>
-      <v-btn color="success" variant="outlined" @click="acceptNotification">
-        Aceptar
+      <v-btn color="error" variant="outlined" @click="criticalNotification">
+        Cortar suministro
+      </v-btn>
+      <v-btn color="success" variant="outlined" @click="ignoreNotification">
+        Ignorar
       </v-btn>
     </v-card-actions>
   </v-card>
