@@ -3,6 +3,7 @@ import { ref, computed, onMounted, watch } from 'vue';
 import { useAlarmStore } from '@/stores/useAlarmStore';
 import { formatDate } from '@/utils/formatDate';
 import { useRouter } from 'vue-router';
+import { getStatusLabelAlarm, getStatusColorAlarm } from '@/utils/formatStateAlarm';
 
 const router = useRouter();
 const alarmsStore = useAlarmStore();
@@ -18,6 +19,7 @@ const headers = ref([
   { title: 'Producto', key: 'productName', sortable: false, width: '15rem' },
   { title: 'Cliente', key: 'clientName', sortable: false, width: '15rem' },
   { title: 'Operador', key: 'userName', sortable: false, width: '15rem' },
+  { title: 'Estado', key: 'status', sortable: false, width: '15rem' },
   { title: '', key: 'actions', sortable: false, width: '10rem' },
 ]);
 
@@ -47,6 +49,12 @@ watch(page, (newPage) => {
       {{ formatDate(item.dateOccurrence) }}
     </template>
 
+    <template v-slot:item.status="{ item }">
+      <v-chip :color="getStatusColorAlarm(item.status)" text-color="white">
+        {{ getStatusLabelAlarm(item.status) }}
+      </v-chip>
+    </template>
+
     <!-- personalizar la última columna -->
     <template v-slot:item.actions="{ item }">
       <div>
@@ -59,6 +67,7 @@ watch(page, (newPage) => {
         </v-btn>
       </div>
     </template>
+
 
     <template v-slot:bottom>
       <div class="text-center pt-2">

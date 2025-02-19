@@ -4,14 +4,12 @@ import { useOrdersStore } from "@/stores/useOrdersStore";
 
 const props = defineProps({
   currentMass: Number,
-  externalId: String
+  externalId: String,
+  caudal: Number,
+  density: Number
 });
 
 const orderStore = useOrdersStore();
-
-console.log(props);
-console.log(props.currentMass);
-console.log(props.externalId);
 const preset = ref(null);
 
 watch(() => props.externalId, async (newExternalId) => {
@@ -27,6 +25,23 @@ const progress = computed(() => {
   return Math.min(100, ((props.currentMass / preset.value) * 100).toFixed(2));
 });
 
+// Calcular el caudal en Kg/s si la densidad es válida
+const massFlowRate = computed(() => {
+  if (!props.caudal || !props.density || props.caudal <= 0 || props.density <= 0) return 0;
+  return props.caudal * props.density; // Kg/s
+});
+
+// Calculate estimated remaining time
+const estimatedTime = computed(() => {
+  if (!preset.value || !massFlowRate.value || massFlowRate.value <= 0) return "";
+  const remainingMass = preset.value - props.currentMass;
+  if (remainingMass <= 0) return "Finalizado";
+  const timeInSeconds = remainingMass / massFlowRate.value;
+  const minutes = Math.floor(timeInSeconds / 60);
+  const seconds = Math.round(timeInSeconds % 60);
+  return minutes > 0 ? `${minutes}m ${seconds}s` : `${seconds}s`;
+});
+
 </script>
 
 <template>
@@ -39,7 +54,7 @@ const progress = computed(() => {
         striped
       >
         <template v-slot:default>
-          <strong>{{ progress }}%</strong>
+          <strong>{{ progress }}%  -  {{ estimatedTime }}</strong>
         </template>
       </v-progress-linear>
     </v-card>

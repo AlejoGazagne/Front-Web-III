@@ -91,7 +91,7 @@ const temperatureDifference = computed(() => {
         Cortar suministro
       </v-btn>
       <v-btn color="success" variant="outlined" @click="ignoreNotification">
-        Ignorar
+        Aceptar
       </v-btn>
     </v-card-actions>
   </v-card>

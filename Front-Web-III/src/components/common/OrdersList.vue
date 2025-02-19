@@ -5,11 +5,11 @@ import { useOrdersStore } from '@/stores/useOrdersStore';
 
 const ordersStore = useOrdersStore();
 
-const page = ref(1);
+const page = ref(ordersStore.currentPage);
 const orders = computed(() => ordersStore.orders);
 const totalPages = computed(() => ordersStore.totalPages);
 const countOrders = computed(() => ordersStore.countOrders);
-const status = ref<string | null>(null);
+const status = ref<string | null>(ordersStore.currentFilter);
 
 const toggleStatus = (newStatus: string | null) => {
   if (status.value === newStatus) {
@@ -26,7 +26,7 @@ onMounted(() => {
   ordersStore.fetchCountOrders()
 });
 
-watch(page, (newPage) => {
+watch(() => page.value, (newPage) => {
   ordersStore.fetchOrders(newPage, status.value);
 });
 </script>
@@ -78,10 +78,13 @@ watch(page, (newPage) => {
     </v-row>
   </section>
       
-  <section class="sections-orders" v-if="orders.length > 0">
-    <v-row v-for="order in orders" :key="order.id" >
-      <Order class="order" :order="order" />
+  <section class="sections-orders">
+    <v-row v-if="orders.length > 0">
+      <Order v-for="order in orders" :key="order.id" class="order" :order="order" />
     </v-row>
+    <div v-else class="text-subtitle-1">
+      <p>No hay órdenes disponibles.</p>
+    </div>
   </section>
 
   <div class="text-center">

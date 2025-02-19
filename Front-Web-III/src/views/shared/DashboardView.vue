@@ -4,7 +4,6 @@ import WidgetFive from '@/components/common/WidgetFive.vue';
 import DonutChart from '@/components/common/DonutChart.vue';
 import Treemap from '@/components/common/Treemap.vue';
 import ColumnChart from '@/components/common/ColumnChart.vue';
-import AlarmsList from '@/components/common/AlarmsList.vue';
 import AlarmsReport from '@/components/common/AlarmsReport.vue';
 
 </script>

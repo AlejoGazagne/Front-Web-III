@@ -23,10 +23,10 @@ export const useOrdersStore = defineStore('orders', {
       try {
         const response = await fetchOrders(page - 1, this.pageSize, filter);
 
-// Mapear y ordenar las órdenes por dateReceived en orden descendente
-this.orders = response.content
-.map(mapOrderFromResponse)
-.sort((a, b) => new Date(b.dateReceived).getTime() - new Date(a.dateReceived).getTime());
+        // Mapear y ordenar las órdenes por dateReceived en orden descendente
+        this.orders = response.content
+          .map(mapOrderFromResponse)
+          .sort((a, b) => new Date(b.dateReceived).getTime() - new Date(a.dateReceived).getTime());
 
         this.countOrders.totalOrders = response.totalElements;
         this.currentPage = page;
@@ -96,6 +96,7 @@ this.orders = response.content
 
     async filterByStatus(status: string) {
       await this.fetchOrders(1, status);
+      this.currentFilter = status;
     },
 
     async goToPage(page: number) {
