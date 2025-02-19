@@ -4,7 +4,7 @@ import { useOrdersStore } from '@/stores/useOrdersStore';
 import { useRoute, useRouter } from 'vue-router';
 import { fetchOrderAlarms } from '@/services/alarmService';
 import { fetchOrderConciliation } from '@/services/orderService';
-import { getStatusLabel, getStatusColor } from '@/utils/formatState';
+import { getStatusLabel, getStatusColor } from '@/utils/formatStateOrder';
 import { formatDate } from '@/utils/formatDate';
 import type { Order } from '@/types/Order';
 import type { Alert } from '@/types/Alert';
@@ -219,9 +219,10 @@ const downloadConciliation = async () => {
           :key="index"
           class="alert-item"
           :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', critical: alert.status === 'CRITICAL' }" >
+
           <div class="d-flex justify-space-between align-center">
             <span><strong>Fecha de registro: </strong>{{ formatDate(alert.dateOccurrence) }}</span>
-            <span class="alert-status" :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', }">
+            <span class="alert-status" :class="{ resolved: alert.status === 'RESOLVED', pending: alert.status === 'PENDING', critical: alert.status === 'CRITICAL' }">
               {{ alert.status === 'RESOLVED' ? 'Resuelta' : alert.status === 'PENDING' ? 'Pendiente' : 'Crítica' }}
             </span>
 
@@ -396,6 +397,10 @@ h3 {
   border-left: 5px solid #ffcc00;
 }
 
+.alert-item.critical {
+  border-left: 5px solid #ff0000;
+}
+
 .alert-status {
   padding: 0.3rem 0.6rem;
   border-radius: 5px;
@@ -409,6 +414,11 @@ h3 {
 
 .alert-status.resolved {
   background-color: #4caf50;
+  color: #fff;
+}
+
+.alert-status.critical {
+  background-color: #ff0000;
   color: #fff;
 }
 </style>

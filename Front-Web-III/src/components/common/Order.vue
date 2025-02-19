@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { useRouter } from 'vue-router';
-import { getStatusColor } from '@/utils/formatState';
-import { getStatusLabel } from '@/utils/formatState';
+import { getStatusColor } from '@/utils/formatStateOrder';
+import { getStatusLabel } from '@/utils/formatStateOrder';
 
 const router = useRouter();
 
