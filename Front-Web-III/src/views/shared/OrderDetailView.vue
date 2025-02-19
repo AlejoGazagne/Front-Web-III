@@ -80,6 +80,25 @@ const downloadConciliation = async () => {
     console.error('Error al descargar la conciliación:', error);
   }
 };
+
+const calcularTiempoCarga = (inicio: Date, fin: Date) => {
+  const fechaInicio = new Date(inicio);
+  const fechaFin = new Date(fin);
+  const diffMs = fechaFin.getTime() - fechaInicio.getTime(); // Diferencia en milisegundos
+
+  if (diffMs <= 0) return "N/A";
+
+  const segundos = Math.floor((diffMs / 1000) % 60);
+  const minutos = Math.floor((diffMs / 1000 / 60) % 60);
+  const horas = Math.floor(diffMs / 1000 / 60 / 60);
+
+  const partes = [];
+  if (horas > 0) partes.push(`${horas}h`);
+  if (minutos > 0) partes.push(`${minutos}m`);
+  if (segundos > 0) partes.push(`${segundos}s`);
+
+  return partes.join(" ");
+};
 </script>
 
 <template>
@@ -263,8 +282,13 @@ const downloadConciliation = async () => {
               <td>{{ item.value }}</td>
             </tr>
             <tr>
-              <td class="text-right"> <strong>Fecha final de carga:</strong></td>
-              <td>{{ order.dateFinalCharge ? formatDate(order.dateFinalCharge.toISOString()) : 'N/A' }}</td>
+              <td class="text-right"> <strong>Tiempo total de carga:</strong></td>
+              <td>
+                {{ order.dateInitialCharge && order.dateFinalCharge
+                    ? calcularTiempoCarga(order.dateInitialCharge, order.dateFinalCharge)
+                    : 'N/A'
+                }}
+              </td>
             </tr>
           </tbody>
         </v-table>
