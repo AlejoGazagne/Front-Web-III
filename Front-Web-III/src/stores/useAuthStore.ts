@@ -7,7 +7,7 @@ export const useAuthStore = defineStore('auth', {
   state: () => ({
     token: localStorage.getItem('token'),
     userData: JSON.parse(localStorage.getItem('userData') || '{}') as UserData,
-    aws: alejo123123123alejo
+    aws_access_key: alejo123123123alejo
   }),
   actions: {
     async login(username: string, password: string) {
