@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_BASE_URL = 'http://localhost:8080/api/v1'; //TODO: agregar en variable de entorno
-
+// acá pongo un token de aws como ejemplo de como es: aws_access_key: "AKIA1234567890ABCDEF"
 export const login = async (username: string, password: string) => {
   try {
     const response = await axios.post(`${API_BASE_URL}/login?username=${username}&password=${password}`);
