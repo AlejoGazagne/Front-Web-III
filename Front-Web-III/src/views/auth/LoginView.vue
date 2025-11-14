@@ -12,7 +12,7 @@ const valid = ref(false);
 const load = ref(false);
 const errorMessage = ref('');
 
-const password = "temporalPass_dev123";
+const pass = "temporalPass_dev123";
 
 const passwordRules = [
   (v: string) => !!v || 'Contraseña es requerida',
@@ -24,7 +24,7 @@ const submit = async () => {
   errorMessage.value = '';
 
   if (valid.value) {
-    const success = await authStore.login(username.value, password.value);
+    const success = await authStore.login(username.value, pass);
 
     if (success) {
       router.push('/');
