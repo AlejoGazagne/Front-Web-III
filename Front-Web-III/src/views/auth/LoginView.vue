@@ -12,6 +12,8 @@ const valid = ref(false);
 const load = ref(false);
 const errorMessage = ref('');
 
+const password = "temporalPass_dev123";
+
 const passwordRules = [
   (v: string) => !!v || 'Contraseña es requerida',
   (v: string) => v.length >= 6 || 'Contraseña debe tener al menos 6 caracteres'
